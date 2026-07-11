@@ -155,7 +155,13 @@
   }
   .routebtn.alt{background:#fff;color:var(--c);border:1.5px solid var(--c)}
   /* map view */
-  #map{height:calc(100vh - 220px);min-height:420px;border-radius:14px;border:1px solid var(--line)}
+  #map{height:calc(100dvh - 300px);min-height:340px;max-height:560px;border-radius:14px;border:1px solid var(--line)}
+  .backhome{
+    position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:14px;z-index:1001;
+    background:var(--piccadilly);color:#fff;font-family:'Rubik';font-weight:600;font-size:14px;
+    border:none;border-radius:999px;padding:11px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);
+    display:none;cursor:pointer;transform:translateZ(0);
+  }
   .legend{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 4px}
   .legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;background:var(--soft);border-radius:999px;padding:4px 11px}
   .legend i{width:11px;height:11px;border-radius:50%;display:inline-block}
@@ -169,7 +175,8 @@
   .alert b{font-weight:600}
   /* bottom nav */
   .bottomnav{
-    position:fixed;bottom:0;left:0;right:0;z-index:30;
+    position:fixed;bottom:0;left:0;right:0;z-index:1000;
+    transform:translateZ(0);-webkit-transform:translateZ(0);
     background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
     border-top:1px solid var(--line);display:flex;
     padding:8px 8px calc(8px + env(safe-area-inset-bottom));
@@ -196,8 +203,8 @@
       <div class="dates">שישי 18.9 – רביעי 23.9.2026 · 5 לילות</div>
     </div>
   </div>
-  <div class="homebase">🏠 הבסיס: הדירה בלב סוהו, ליד קרנבי ·
-    <a href="https://maps.google.com/?q=Carnaby+Street+London">מפה</a>
+  <div class="homebase">🏠 הבסיס: Modern Carnaby Soho · 79 Beak St, W1F 9SU ·
+    <a href="https://maps.google.com/?q=79+Beak+Street+London+W1F+9SU">מפה</a>
   </div>
 </header>
 
@@ -232,8 +239,8 @@
       <div class="stop">
         <div class="time">~14:30</div>
         <h3>צ׳ק-אין בדירה</h3>
-        <div class="desc">הדירה בסוהו — דקה מקרנבי סטריט.</div>
-        <a class="maplink" href="https://maps.google.com/?q=Carnaby+Street+London">אזור קרנבי</a>
+        <div class="desc">Modern Carnaby Soho · דירת חדר עם מיזוג, לב סוהו.</div>
+        <a class="maplink" href="https://maps.google.com/?q=79+Beak+Street+London">Beak Street 79</a>
       </div>
       <div class="stop">
         <div class="time">אחה״צ</div>
@@ -248,8 +255,8 @@
       </div>
     </div>
     <div class="dayroutes">
-      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Carnaby+Street+London&destination=Chinatown+Gerrard+Street+London&waypoints=Carnaby+Street+London%7CLiberty+London%7CPiccadilly+Circus+London&travelmode=walking">🗺️ מסלול הערב ברגל</a>
-      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Heathrow+Terminal+5&destination=Carnaby+Street+London&travelmode=transit">🚇 מהית׳רו לדירה</a>
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=Chinatown+Gerrard+Street+London&waypoints=Carnaby+Street+London%7CLiberty+London%7CPiccadilly+Circus+London&travelmode=walking">🗺️ מסלול הערב ברגל</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Heathrow+Terminal+5&destination=79+Beak+Street+London&travelmode=transit">🚇 מהית׳רו לדירה</a>
     </div>
   </section>
 
@@ -320,7 +327,7 @@
     </div>
     <div class="dayroutes">
       <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Liverpool+Street+Station+London&destination=BOXPARK+Shoreditch+London&waypoints=Old+Spitalfields+Market+London%7CHanbury+Street+London%7CTruman+Brewery+Brick+Lane+London%7CBeigel+Bake+Brick+Lane+London%7CRedchurch+Street+London%7CRivington+Street+London&travelmode=walking">🗺️ מסלול שורדיץ׳ המלא ברגל</a>
-      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Carnaby+Street+London&destination=Liverpool+Street+Station+London&travelmode=transit">🚇 מהדירה לתחנה</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=Liverpool+Street+Station+London&travelmode=transit">🚇 מהדירה לתחנה</a>
     </div>
   </section>
 
@@ -378,7 +385,7 @@
     </div>
     <div class="dayroutes">
       <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Sloane+Square+Station+London&destination=Battersea+Power+Station+London&waypoints=Saatchi+Gallery+London%7CAlbert+Bridge+London%7CBattersea+Park+London&travelmode=walking">🗺️ מסלול צ׳לסי–בטרסי ברגל</a>
-      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Carnaby+Street+London&destination=ABBA+Arena+Pudding+Mill+Lane+London&travelmode=transit">🚇 בדרך לאבבא</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=ABBA+Arena+Pudding+Mill+Lane+London&travelmode=transit">🚇 בדרך לאבבא</a>
     </div>
   </section>
 
@@ -424,7 +431,7 @@
     </div>
     <div class="dayroutes">
       <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Victoria+and+Albert+Museum+London&destination=Moco+Museum+Marble+Arch+London&travelmode=transit">🚇 מה-V&A ל-Moco</a>
-      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Moco+Museum+Marble+Arch+London&destination=Carnaby+Street+London&travelmode=walking">🗺️ הביתה דרך אוקספורד סטריט</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Moco+Museum+Marble+Arch+London&destination=79+Beak+Street+London&travelmode=walking">🗺️ הביתה דרך אוקספורד סטריט</a>
     </div>
   </section>
 
@@ -499,7 +506,7 @@
       </div>
     </div>
     <div class="dayroutes">
-      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Carnaby+Street+London&destination=Heathrow+Terminal+4&travelmode=transit">🚇 להית׳רו טרמינל 4</a>
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=Heathrow+Terminal+4&travelmode=transit">🚇 להית׳רו טרמינל 4</a>
     </div>
   </section>
 
@@ -608,6 +615,8 @@
 
 <footer>נבנה עם קלוד · ספטמבר 2026 · נסיעה טובה! ✈️</footer>
 
+<button class="backhome" id="backhome">🚇 חזרה למסלול</button>
+
 <!-- bottom navigation -->
 <div class="bottomnav">
   <button class="bn active" data-view="view-days"><span class="ic">🚇</span>מסלול</button>
@@ -634,8 +643,12 @@ document.querySelectorAll('.bn').forEach(btn=>{
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('show'));
     btn.classList.add('active');
     document.getElementById(btn.dataset.view).classList.add('show');
+    document.getElementById('backhome').style.display = (btn.dataset.view==='view-map') ? 'block' : 'none';
     window.scrollTo({top:0});
   });
+});
+document.getElementById('backhome').addEventListener('click',()=>{
+  document.querySelector('.bn[data-view="view-days"]').click();
 });
 // ---- checklist with graceful persistence ----
 const store = {
@@ -654,12 +667,12 @@ document.querySelectorAll('.check').forEach(row=>{
 let mapObj=null;
 function initMap(){
   if(mapObj || typeof L==='undefined') { if(mapObj) setTimeout(()=>mapObj.invalidateSize(),80); return; }
-  const home=[51.5131,-0.1389];
+  const home=[51.5127,-0.13793];
   mapObj=L.map('map',{zoomControl:true}).setView([51.508,-0.11],12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(mapObj);
   const days=[
     {c:'#6950A1',n:'ו׳ 18.9',pts:[
-      [51.5131,-0.1389,'🏠 הדירה','הבסיס שלכם בסוהו'],
+      [51.5127,-0.13793,'🏠 הדירה — 79 Beak St','הבסיס שלכם, Modern Carnaby Soho'],
       [51.5131862,-0.1388548,'Carnaby Street','דקה מהדלת'],
       [51.5138717,-0.1400263,'Liberty','חנות הכלבו הטיודורית'],
       [51.5098597,-0.1342809,'Piccadilly Circus','השלטים המפורסמים'],
