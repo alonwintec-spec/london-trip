@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#0019A8">
+<meta name="robots" content="noindex, nofollow">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="לונדון">
+<title>לונדון · אלון וחגית · 18–23.9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;800&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --ink:#1C1C1B; --paper:#FFFFFF; --soft:#F3F4F6; --line:#E5E7EB; --muted:#6B7280;
+    --elizabeth:#6950A1; --central:#DC241F; --district:#007D32;
+    --piccadilly:#0019A8; --jubilee:#7C868D; --victoria:#00A0E2;
+    --gold:#B8860B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Heebo',system-ui,-apple-system,sans-serif;
+    background:var(--paper); color:var(--ink);
+    padding-bottom:calc(76px + env(safe-area-inset-bottom));
+  }
+  /* ---------- header ---------- */
+  header{
+    background:var(--piccadilly); color:#fff;
+    padding:calc(14px + env(safe-area-inset-top)) 18px 16px;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .roundel{
+    width:44px;height:44px;flex:none;position:relative;
+  }
+  .roundel .ring{position:absolute;inset:0;border:6px solid #DC241F;border-radius:50%;background:#fff}
+  .roundel .bar{position:absolute;left:-4px;right:-4px;top:50%;height:12px;transform:translateY(-50%);background:#0019A8;border-radius:2px;display:flex;align-items:center;justify-content:center}
+  .roundel .bar span{color:#fff;font-family:'Rubik';font-weight:800;font-size:8px;letter-spacing:.5px}
+  header h1{font-family:'Rubik';font-weight:800;font-size:21px;line-height:1.15}
+  header .dates{font-size:13px;opacity:.85;font-weight:300;margin-top:2px}
+  .refreshbtn{
+    margin-inline-start:auto;flex:none;align-self:center;
+    background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);
+    font-family:'Rubik';font-weight:600;font-size:12px;border-radius:999px;
+    padding:6px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
+  }
+  .refreshbtn:active{background:rgba(255,255,255,.3)}
+  .homebase{
+    margin-top:12px;background:rgba(255,255,255,.12);border-radius:10px;
+    padding:9px 12px;font-size:13px;display:flex;gap:8px;align-items:center;
+  }
+  .homebase a{color:#fff;font-weight:500;text-decoration:underline;text-underline-offset:2px}
+  /* safe-area strip: covers the Dynamic Island so content doesn't slide under it */
+  .safetop{
+    position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);
+    background:var(--piccadilly);z-index:2000;pointer-events:none;
+  }
+  /* ---------- day selector ---------- */
+  nav.days{
+    position:sticky;top:env(safe-area-inset-top);z-index:20;background:#fff;
+    display:flex;gap:8px;overflow-x:auto;padding:12px 16px;
+    border-bottom:1px solid var(--line);
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  nav.days::-webkit-scrollbar{display:none}
+  .daychip{
+    flex:none;border:2px solid var(--line);background:#fff;border-radius:999px;
+    padding:7px 14px;font-family:'Rubik';font-weight:600;font-size:14px;color:var(--ink);
+    display:flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap;
+    transition:all .15s;
+  }
+  .daychip .dot{width:11px;height:11px;border-radius:50%;background:var(--c)}
+  .daychip.active{border-color:var(--c);background:var(--c);color:#fff}
+  .daychip.active .dot{background:#fff}
+  /* ---------- day panels ---------- */
+  main{max-width:640px;margin:0 auto}
+  .panel{display:none;padding:18px 18px 8px;animation:fade .25s ease}
+  .panel.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .dayhead{margin-bottom:6px}
+  .dayhead .eyebrow{
+    display:inline-block;font-family:'Rubik';font-weight:800;font-size:11px;color:#fff;
+    background:var(--c);padding:3px 10px;border-radius:4px;letter-spacing:.5px;
+  }
+  .dayhead h2{font-family:'Rubik';font-weight:800;font-size:24px;margin-top:8px}
+  .dayhead p{color:var(--muted);font-size:14px;margin-top:3px;font-weight:300}
+  /* ---------- tube-line timeline ---------- */
+  .tline{position:relative;margin:20px 0 10px;padding-right:26px}
+  .tline::before{
+    content:'';position:absolute;right:8px;top:10px;bottom:10px;width:7px;
+    background:var(--c);border-radius:4px;
+  }
+  .stop{position:relative;padding:0 16px 24px 0}
+  .stop:last-child{padding-bottom:6px}
+  .stop::before{ /* station circle */
+    content:'';position:absolute;right:-25px;top:4px;width:15px;height:15px;
+    background:#fff;border:4px solid var(--c);border-radius:50%;z-index:1;
+  }
+  .stop.big::before{width:19px;height:19px;right:-27px;top:2px;border-width:5px}
+  .stop .time{
+    font-family:'Rubik';font-weight:800;font-size:13px;color:var(--c);letter-spacing:.3px;
+  }
+  .stop h3{font-family:'Rubik';font-weight:600;font-size:16.5px;margin:2px 0 3px}
+  .stop .desc{font-size:14px;color:#3F4450;line-height:1.55;font-weight:300}
+  .stop .desc b{font-weight:500}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .tag{
+    font-size:12px;font-weight:500;border-radius:6px;padding:3px 9px;
+    background:var(--soft);color:#374151;display:inline-flex;align-items:center;gap:4px;
+  }
+  .tag.ticket{background:#FEF3C7;color:#92400E}
+  .tag.tube{background:#EBF0FF;color:var(--piccadilly)}
+  .tag.todo{background:#FEE2E2;color:#991B1B}
+  .tag a{color:inherit;text-decoration:none}
+  a.maplink{
+    display:inline-flex;align-items:center;gap:4px;margin-top:7px;
+    font-size:13px;font-weight:500;color:var(--c);text-decoration:none;
+  }
+  a.maplink::before{content:'📍';font-size:12px}
+  /* seat card for tickets */
+  .seatcard{
+    margin-top:9px;border:1.5px dashed var(--c);border-radius:10px;padding:9px 12px;
+    font-size:13px;background:#fff;display:flex;flex-wrap:wrap;gap:5px 16px;
+  }
+  .seatcard span b{font-family:'Rubik';font-weight:600}
+  /* ---------- generic sections (food / checklist) ---------- */
+  .card{
+    border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:14px;
+    background:#fff;
+  }
+  .card h3{font-family:'Rubik';font-weight:600;font-size:17px;display:flex;align-items:center;gap:8px}
+  .card .sub{font-size:13px;color:var(--muted);margin-top:2px}
+  .card p{font-size:14px;line-height:1.6;margin-top:8px;font-weight:300;color:#3F4450}
+  .card .walk{
+    display:inline-block;margin-top:8px;font-size:12.5px;font-weight:500;
+    background:var(--soft);border-radius:6px;padding:3px 9px;color:#374151;
+  }
+  .btnrow{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+  .btn{
+    font-family:'Rubik';font-weight:600;font-size:13.5px;text-decoration:none;
+    padding:8px 15px;border-radius:9px;display:inline-block;
+  }
+  .btn.solid{background:var(--piccadilly);color:#fff}
+  .btn.ghost{border:1.5px solid var(--line);color:var(--ink)}
+  /* checklist */
+  .check{
+    display:flex;gap:12px;align-items:flex-start;padding:13px 4px;border-bottom:1px solid var(--line);
+    cursor:pointer;user-select:none;
+  }
+  .check:last-child{border-bottom:none}
+  .box{
+    width:23px;height:23px;flex:none;border:2px solid #C7CBD1;border-radius:7px;margin-top:1px;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;
+    transition:all .15s;
+  }
+  .check.done .box{background:var(--district);border-color:var(--district)}
+  .check .txt{font-size:14.5px;line-height:1.5}
+  .check .txt small{display:block;color:var(--muted);font-size:12.5px;font-weight:300;margin-top:1px}
+  .check.done .txt{text-decoration:line-through;color:#9CA3AF}
+  .check.done .txt small{color:#C2C7CE}
+  /* daily route button */
+  .dayroutes{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+  .routebtn{
+    font-family:'Rubik';font-weight:600;font-size:13.5px;text-decoration:none;color:#fff;
+    background:var(--c);padding:9px 15px;border-radius:9px;display:inline-flex;align-items:center;gap:6px;
+  }
+  .routebtn.alt{background:#fff;color:var(--c);border:1.5px solid var(--c)}
+  /* map view */
+  #map{height:calc(100dvh - 300px);min-height:340px;max-height:560px;border-radius:14px;border:1px solid var(--line)}
+  .backhome{
+    position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:14px;z-index:1001;
+    background:var(--piccadilly);color:#fff;font-family:'Rubik';font-weight:600;font-size:14px;
+    border:none;border-radius:999px;padding:11px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);
+    display:none;cursor:pointer;transform:translateZ(0);
+  }
+  .legend{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 4px}
+  .lgbtn{
+    display:inline-flex;align-items:center;gap:6px;font-family:'Heebo';font-size:12.5px;font-weight:500;
+    background:var(--soft);border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;color:var(--ink);
+  }
+  .lgbtn i{width:11px;height:11px;border-radius:50%;display:inline-block;background:var(--c)}
+  .lgbtn.active{background:var(--c);border-color:var(--c);color:#fff}
+  .lgbtn.active i{background:#fff}
+  .leaflet-popup-content{font-family:'Heebo',sans-serif;direction:rtl;text-align:right;font-size:13.5px}
+  .leaflet-popup-content b{font-family:'Rubik'}
+  /* alert */
+  .alert{
+    background:#FFF7E6;border:1.5px solid #F5D890;border-radius:12px;
+    padding:12px 14px;font-size:13.5px;line-height:1.55;margin:16px 18px 0;
+  }
+  .alert b{font-weight:600}
+  /* now card + countdown */
+  .nowcard{
+    margin:14px 18px 0;border-radius:14px;padding:14px 16px;
+    background:linear-gradient(135deg,#0019A8,#3B2FA3);color:#fff;
+  }
+  .nowcard .nc-top{font-family:'Rubik';font-weight:800;font-size:13px;opacity:.85;letter-spacing:.3px}
+  .nowcard .nc-main{font-family:'Rubik';font-weight:800;font-size:19px;margin-top:4px}
+  .nowcard .nc-sub{font-size:13.5px;font-weight:300;margin-top:5px;opacity:.92;line-height:1.5}
+  /* currency converter */
+  .fxcard{border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:16px;background:#fff}
+  .fxcard h3{font-family:'Rubik';font-weight:600;font-size:17px}
+  .fxrow{display:flex;gap:10px;margin-top:12px;align-items:center}
+  .fxrow input{
+    flex:1;min-width:0;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;
+    font-family:'Rubik';font-weight:600;font-size:17px;text-align:center;direction:ltr;
+  }
+  .fxrow input:focus{outline:none;border-color:var(--piccadilly)}
+  .fxrow .fxlabel{font-family:'Rubik';font-weight:800;font-size:15px;color:var(--muted);flex:none}
+  .fxtable{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .fxtable span{background:var(--soft);border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:500}
+  .fxnote{font-size:11.5px;color:var(--muted);font-weight:300;margin-top:9px}
+  /* weather */
+  /* fullscreen map */
+  .fsbtn{
+    display:inline-flex;align-items:center;gap:5px;font-family:'Rubik';font-weight:600;font-size:12.5px;
+    background:var(--piccadilly);color:#fff;border:none;border-radius:999px;padding:5px 13px;cursor:pointer;
+  }
+  #fsclose{
+    display:none;position:fixed;top:calc(12px + env(safe-area-inset-top));left:12px;z-index:3100;
+    background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:999px;
+    font-family:'Rubik';font-weight:600;font-size:14px;padding:9px 16px;cursor:pointer;
+    box-shadow:0 3px 12px rgba(0,0,0,.25);
+  }
+  body.mapfs #map{
+    position:fixed;inset:0;height:100dvh;max-height:none;min-height:0;z-index:2900;border-radius:0;border:none;
+  }
+  body.mapfs #fsclose{display:block}
+  body.mapfs #maplegend{
+    position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:10px;right:10px;z-index:3100;
+    background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-radius:14px;padding:9px 10px;
+    flex-wrap:nowrap;overflow-x:auto;box-shadow:0 4px 16px rgba(0,0,0,.22);margin:0;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  body.mapfs #maplegend::-webkit-scrollbar{display:none}
+  body.mapfs #maplegend .lgbtn{flex:none}
+  body.mapfs .bottomnav,body.mapfs .backhome{display:none!important}
+  .wcard{
+    display:flex;align-items:center;gap:14px;border:1px solid var(--line);
+    border-radius:14px;padding:13px 16px;margin-bottom:10px;background:#fff;
+  }
+  .wcard.today{border:2px solid var(--piccadilly);background:#F7F9FF}
+  .wcard .emoji{font-size:34px;flex:none}
+  .wcard .wday{font-family:'Rubik';font-weight:600;font-size:15.5px}
+  .wcard .wdate{font-size:12.5px;color:var(--muted);font-weight:300}
+  .wcard .wdesc{font-size:13px;color:#3F4450;font-weight:300;margin-top:2px}
+  .wcard .temps{margin-inline-start:auto;text-align:left;flex:none}
+  .wcard .tmax{font-family:'Rubik';font-weight:800;font-size:19px}
+  .wcard .tmin{font-size:13px;color:var(--muted)}
+  .wcard .rain{font-size:12px;color:#2563EB;font-weight:500;margin-top:2px}
+  .wstatus{text-align:center;color:var(--muted);font-size:14px;padding:30px 0;font-weight:300}
+  /* bottom nav */
+  .bottomnav{
+    position:fixed;bottom:0;left:0;right:0;z-index:1000;
+    transform:translateZ(0);-webkit-transform:translateZ(0);
+    background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);display:flex;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+  }
+  .bn{
+    flex:1;text-align:center;font-family:'Rubik';font-weight:600;font-size:12px;color:#9CA3AF;
+    background:none;border:none;padding:6px 0 3px;cursor:pointer;
+  }
+  .bn .ic{font-size:21px;display:block;margin-bottom:2px;filter:grayscale(1);opacity:.55}
+  .bn.active{color:var(--piccadilly)}
+  .bn.active .ic{filter:none;opacity:1}
+  .view{display:none}
+  .view.show{display:block}
+  footer{padding:26px 18px 12px;text-align:center;color:#C2C7CE;font-size:12px;font-weight:300}
+</style>
+</head>
+<body>
+<div class="safetop"></div>
+
+<header>
+  <div class="brand">
+    <div class="roundel"><div class="ring"></div><div class="bar"><span>LONDON</span></div></div>
+    <div>
+      <h1>אלון וחגית בלונדון</h1>
+      <div class="dates">שישי 18.9 – רביעי 23.9.2026 · 5 לילות</div>
+    </div>
+    <button class="refreshbtn" id="refreshbtn">🔄 3.2</button>
+  </div>
+  <div class="homebase">🏠 הבסיס: Modern Carnaby Soho · 79 Beak St, W1F 9SU ·
+    <a href="https://maps.google.com/?q=79+Beak+Street+London+W1F+9SU">מפה</a>
+  </div>
+</header>
+
+<!-- ================= VIEW: ITINERARY ================= -->
+<div class="view show" id="view-days">
+
+  <div class="nowcard" id="nowcard" style="display:none"></div>
+
+  <nav class="days" id="daynav">
+    <button class="daychip active" style="--c:var(--elizabeth)" data-day="d1"><span class="dot"></span>ו׳ 18.9</button>
+    <button class="daychip" style="--c:var(--central)" data-day="d2"><span class="dot"></span>ש׳ 19.9</button>
+    <button class="daychip" style="--c:var(--district)" data-day="d3"><span class="dot"></span>א׳ 20.9</button>
+    <button class="daychip" style="--c:var(--piccadilly)" data-day="d4"><span class="dot"></span>ב׳ 21.9</button>
+    <button class="daychip" style="--c:var(--jubilee)" data-day="d5"><span class="dot"></span>ג׳ 22.9</button>
+    <button class="daychip" style="--c:var(--victoria)" data-day="d6"><span class="dot"></span>ד׳ 23.9</button>
+  </nav>
+
+  <main>
+
+  <!-- ============ DAY 1 ============ -->
+  <section class="panel show" id="d1" style="--c:var(--elizabeth)">
+    <div class="dayhead">
+      <span class="eyebrow">יום הגעה</span>
+      <h2>נוחתים ומתמקמים בסוהו</h2>
+      <p>פסטיבל העיצוב של לונדון בעיצומו בכל רחבי העיר</p>
+    </div>
+    <div class="tline">
+      <div class="stop big">
+        <div class="time">12:35</div>
+        <h3>נחיתה בהית׳רו · טרמינל 5</h3>
+        <div class="desc">טיסת BA759 מבאזל. מזוודה אחת לכל אחד.</div>
+        <div class="tags"><span class="tag tube">🚇 Elizabeth Line → Tottenham Court Rd (~45 דק׳)</span></div>
+      </div>
+      <div class="stop">
+        <div class="time">~14:30</div>
+        <h3>צ׳ק-אין בדירה</h3>
+        <div class="desc">Modern Carnaby Soho · דירת חדר עם מיזוג, לב סוהו.</div>
+        <a class="maplink" href="https://maps.google.com/?q=79+Beak+Street+London">Beak Street 79</a>
+      </div>
+      <div class="stop">
+        <div class="time">אחה״צ</div>
+        <h3>סיבוב היכרות רגלי</h3>
+        <div class="desc">קרנבי סטריט → ריג׳נט סטריט → פיקדילי סרקוס → צ׳יינה־טאון. הכול במרחק 5–10 דקות מהדלת.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">ערב</div>
+        <h3>ארוחת ערב ראשונה 🥟</h3>
+        <div class="desc"><b>Yauatcha</b> (דים־סאם, כוכב מישלן) או <b>Dishoom Carnaby</b> (הודית) — שתיהן 2 דקות הליכה מהדירה.</div>
+        <div class="tags"><span class="tag todo">להזמין מראש — ראו לשונית אוכל</span></div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=Chinatown+Gerrard+Street+London&waypoints=Carnaby+Street+London%7CLiberty+London%7CPiccadilly+Circus+London&travelmode=walking">🗺️ מסלול הערב ברגל</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Heathrow+Terminal+5&destination=79+Beak+Street+London&travelmode=transit">🚇 מהית׳רו לדירה</a>
+    </div>
+  </section>
+
+  <!-- ============ DAY 2 ============ -->
+  <section class="panel" id="d2" style="--c:var(--central)">
+    <div class="dayhead">
+      <span class="eyebrow">יום שורדיץ׳</span>
+      <h2>Shoreditch Design Week</h2>
+      <p>מסלול בקשת אחת מדרום לצפון · 6–8 ק״מ הליכה · נעליים נוחות!</p>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">09:30</div>
+        <h3>יציאה מהדירה</h3>
+        <div class="desc">Elizabeth Line מ-Tottenham Court Rd ל-Liverpool Street (~10 דק׳). טיפ: להוריד מראש את אפליקציית <b>Bloomberg Connects</b> — המדריך הרשמי של פסטיבל העיצוב עם מפת כל האירועים הפעילים.</div>
+        <div class="tags"><span class="tag tube">🚇 Liverpool Street</span></div>
+      </div>
+      <div class="stop">
+        <div class="time">10:00</div>
+        <h3>Old Spitalfields Market ☕</h3>
+        <div class="desc">פתיחה רכה בשוק הוויקטוריאני המקורה — דוכני אמנים ועיצוב, קפה. לא לאכול יותר מדי, היום בנוי על נשנושים.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Old+Spitalfields+Market+London">Horner Square 16</a>
+      </div>
+      <div class="stop">
+        <div class="time">10:45</div>
+        <h3>סטריט-ארט: Fashion St + Hanbury St</h3>
+        <div class="desc">הגלריות הפתוחות של לונדון — יצירות על קירות, תריסים ופינות, מתחלפות כל הזמן. להסתכל למעלה!</div>
+      </div>
+      <div class="stop big">
+        <div class="time">11:15</div>
+        <h3>Truman Brewery + השווקים 🎨</h3>
+        <div class="desc">לב שבת בברייק ליין: <b>Backyard Market</b> (אמנים ומעצבים צעירים), <b>Vintage Market</b> במרתף, ופופ-אפים של פסטיבל העיצוב במתחם.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Truman+Brewery+Brick+Lane+London">Brick Lane 91</a>
+      </div>
+      <div class="stop">
+        <div class="time">12:45</div>
+        <h3>Beigel Bake 🥯</h3>
+        <div class="desc">המוסד: פתוח 24/7 מאז 1974. בייגל <b>salt beef</b> עם חרדל — הנשנוש הכי מפורסם במזרח לונדון. התור זז מהר.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Beigel+Bake+159+Brick+Lane+London">Brick Lane 159</a>
+      </div>
+      <div class="stop">
+        <div class="time">13:15</div>
+        <h3>Redchurch Street</h3>
+        <div class="desc">הרחוב הכי מעוצב בשורדיץ׳ — חנויות קונספט וגלריות, כמעט כולן משתתפות בפסטיבל. עצירת קפה: <b>Allpress Espresso</b>.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">14:00</div>
+        <h3>משולש העיצוב 📐</h3>
+        <div class="desc">הגרעין ההיסטורי: <b>Rivington St, Charlotte Rd, Great Eastern St</b>. חנויות התצוגה הוותיקות (SCP ועוד) עם דלתות פתוחות, השקות ומיצבים. שעה-שעתיים של שוטטות עם Bloomberg Connects ביד.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Rivington+Street+Shoreditch+London">Rivington Street</a>
+      </div>
+      <div class="stop">
+        <div class="time">15:30</div>
+        <h3>Boxpark 🍺</h3>
+        <div class="desc">עצירה במתחם הקונטיינרים — דרינק ואווירת שבת אחה״צ.</div>
+      </div>
+      <div class="stop">
+        <div class="time">16:30</div>
+        <h3>סיום לבחירתכם</h3>
+        <div class="desc"><b>א׳:</b> הליכה ל-Old Street וטיוב הביתה. <b>ב׳:</b> אם יש כוח — 10 דק׳ ל-<b>Columbia Road</b>, רחוב קסום של חנויות עצמאיות (שוק הפרחים רק בראשון, אבל הרחוב יפה גם בלעדיו).</div>
+        <div class="tags"><span class="tag tube">🚇 Old Street → הביתה</span></div>
+      </div>
+      <div class="stop">
+        <div class="time">ערב</div>
+        <h3>ROKA Mayfair? 🇯🇵</h3>
+        <div class="desc">ערב מוצע ל-ROKA — אם הזמנתם. מנוחה בדירה קודם.</div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Liverpool+Street+Station+London&destination=BOXPARK+Shoreditch+London&waypoints=Old+Spitalfields+Market+London%7CHanbury+Street+London%7CTruman+Brewery+Brick+Lane+London%7CBeigel+Bake+Brick+Lane+London%7CRedchurch+Street+London%7CRivington+Street+London&travelmode=walking">🗺️ מסלול שורדיץ׳ המלא ברגל</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=Liverpool+Street+Station+London&travelmode=transit">🚇 מהדירה לתחנה</a>
+    </div>
+  </section>
+
+  <!-- ============ DAY 3 ============ -->
+  <section class="panel" id="d3" style="--c:var(--district)">
+    <div class="dayhead">
+      <span class="eyebrow">צ׳לסי + ערב אבבא</span>
+      <h2>Saatchi, בטרסי פארק ו-ABBA</h2>
+      <p>היום האחרון של פסטיבל האמנויות של צ׳לסי</p>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">~10:00</div>
+        <h3>לצ׳לסי</h3>
+        <div class="desc">קו Piccadilly מ-Piccadilly Circus → מעבר ב-South Kensington או ישירות לקו District עד Sloane Square.</div>
+        <div class="tags"><span class="tag tube">🚇 ~20 דק׳</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">בוקר</div>
+        <h3>Saatchi Gallery + Chelsea Arts Festival</h3>
+        <div class="desc">תערוכות הכניסה החופשית בקומת הקרקע + אווירת הפסטיבל: הופעות חינם ב-Duke of York Square, King's Road ו-Sloane Square, ושוק האוכל בכיכר.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Saatchi+Gallery+London">Duke of York's HQ, King's Rd</a>
+      </div>
+      <div class="stop">
+        <div class="time">~13:00</div>
+        <h3>Battersea Park 🌳</h3>
+        <div class="desc">הליכה יפהפייה דרך <b>גשר אלברט</b> אל הפארק: הפגודה על הנהר, הגנים, ואם יש כוח — Battersea Power Station המחודשת (קניון + נוף).</div>
+        <a class="maplink" href="https://maps.google.com/?q=Battersea+Park+London">Battersea Park</a>
+      </div>
+      <div class="stop">
+        <div class="time">15:30</div>
+        <h3>חזרה לדירה + מנוחה</h3>
+        <div class="desc">להטעין טלפונים! הכרטיסים באפליקציית AXS דורשים אינטרנט וסוללה.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">16:45</div>
+        <h3>יציאה ל-ABBA Arena</h3>
+        <div class="desc">Elizabeth Line עד Stratford → DLR תחנה אחת ל-Pudding Mill Lane. ~40 דק׳.</div>
+        <div class="tags"><span class="tag tube">🚇 Stratford → DLR</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">18:00</div>
+        <h3>🎤 ABBA Voyage</h3>
+        <div class="desc">מופע הערב. כניסה דרך <b>Gate A – Arena Right</b>. הכרטיסים באפליקציית AXS של חגית — צילומי מסך לא עובדים, הקוד מתחדש כל דקה.</div>
+        <div class="seatcard">
+          <span>בלוק <b>D</b></span><span>שורה <b>B</b></span><span>🎫 ×2 באפליקציית AXS</span>
+        </div>
+        <a class="maplink" href="https://maps.google.com/?q=ABBA+Arena+London">ABBA Arena, Pudding Mill Lane</a>
+      </div>
+      <div class="stop">
+        <div class="time">~21:00</div>
+        <h3>ארוחת ערב מאוחרת בסוהו</h3>
+        <div class="desc">המופע מסתיים ~19:40. חוזרים לסוהו — צ׳יינה־טאון פתוחה עד מאוחר.</div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Sloane+Square+Station+London&destination=Battersea+Power+Station+London&waypoints=Saatchi+Gallery+London%7CAlbert+Bridge+London%7CBattersea+Park+London&travelmode=walking">🗺️ מסלול צ׳לסי–בטרסי ברגל</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=ABBA+Arena+Pudding+Mill+Lane+London&travelmode=transit">🚇 בדרך לאבבא</a>
+    </div>
+  </section>
+
+  <!-- ============ DAY 4 ============ -->
+  <section class="panel" id="d4" style="--c:var(--piccadilly)">
+    <div class="dayhead">
+      <span class="eyebrow">יום מוזיאונים</span>
+      <h2>סקיאפרלי ב-V&A + Moco</h2>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">10:00</div>
+        <h3>יוצאים לסאות׳ קנזינגטון</h3>
+        <div class="desc">קו Piccadilly מ-Piccadilly Circus, 15 דק׳. מהתחנה מנהרה מקורה ישר למוזיאון.</div>
+        <div class="tags"><span class="tag tube">🚇 South Kensington</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">10:45</div>
+        <h3>🎫 Schiaparelli: Fashion Becomes Art</h3>
+        <div class="desc">תערוכת האופנה הגדולה של השנה ב-V&A. שריינו 1.5–2 שעות.</div>
+        <div class="seatcard">
+          <span>🎫 ×2 מבוגרים</span><span>כניסה <b>10:45</b></span><span>ההזמנה במייל</span>
+        </div>
+        <a class="maplink" href="https://maps.google.com/?q=Victoria+and+Albert+Museum+London">V&A, Cromwell Rd</a>
+      </div>
+      <div class="stop">
+        <div class="time">~13:00</div>
+        <h3>המשך במוזיאון + צהריים</h3>
+        <div class="desc">ה-V&A עצמו חינם ומהמם — חצר הפנימית, אולם התכשיטים. צהריים בקפה ההיסטורי של המוזיאון או סביב התחנה.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">~15:30</div>
+        <h3>Moco Museum 🖌️</h3>
+        <div class="desc">בנקסי, וורהול, בסקיאט, KAWS, קוסאמה + קומת אמנות דיגיטלית אימרסיבית. 60–90 דקות. כרטיסים אונליין זולים יותר.</div>
+        <div class="tags"><span class="tag tube">🚇 Piccadilly → Green Park → Jubilee ל-Bond St, או אוטובוס</span><span class="tag"><a href="https://www.mocomuseum.com/london/">כרטיסים ↗</a></span></div>
+        <a class="maplink" href="https://maps.google.com/?q=Moco+Museum+London+Marble+Arch">Marble Arch 1-4</a>
+      </div>
+      <div class="stop">
+        <div class="time">~17:00</div>
+        <h3>הייד פארק עם מדריך קולי 🎧 (אופציונלי)</h3>
+        <div class="desc">Moco נמצא ממש בכניסה לפארק! סיור VoiceMap מודרך ב-GPS יוצא ממרבל ארץ׳: ספיקרס קורנר, הסרפנטיין, אנדרטת דיאנה. הסיור המלא 90 דק׳ — אפשר גם חצי ולצאת באמצע.</div>
+        <div class="tags"><span class="tag"><a href="https://voicemap.me/tour/london/hyde-park-and-kensington-gardens-royalty-relaxation-and-rebellion">הסיור ב-VoiceMap ↗</a></span></div>
+        <a class="maplink" href="https://maps.google.com/?q=Marble+Arch+Hyde+Park+London">כניסת מרבל ארץ׳</a>
+      </div>
+      <div class="stop">
+        <div class="time">~18:30</div>
+        <h3>הליכה הביתה דרך אוקספורד סטריט</h3>
+        <div class="desc">20 דקות הליכה מ-Marble Arch לדירה — קניות בדרך אם מתחשק, ומנוחה לפני הערב.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">20:00</div>
+        <h3>🔥 The Barbary</h3>
+        <div class="desc">ישיבה על בר סביב האש הפתוחה, Neal's Yard. 12 דק׳ הליכה מהדירה דרך שוק קובנט גארדן.</div>
+        <div class="tags"><span class="tag todo">בכפוף להזמנה</span></div>
+        <a class="maplink" href="https://maps.google.com/?q=The+Barbary+Neals+Yard+London">Neal's Yard 16</a>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Victoria+and+Albert+Museum+London&destination=Moco+Museum+Marble+Arch+London&travelmode=transit">🚇 מה-V&A ל-Moco</a>
+      <a class="routebtn alt" href="https://www.google.com/maps/dir/?api=1&origin=Moco+Museum+Marble+Arch+London&destination=79+Beak+Street+London&travelmode=walking">🗺️ הביתה דרך אוקספורד סטריט</a>
+    </div>
+  </section>
+
+  <!-- ============ DAY 5 ============ -->
+  <section class="panel" id="d5" style="--c:var(--jubilee)">
+    <div class="dayhead">
+      <span class="eyebrow">יום דרום הנהר</span>
+      <h2>Tate Modern, הגדה הדרומית וקברט</h2>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">~10:00</div>
+        <h3>ל-Tate Modern</h3>
+        <div class="desc">קו Central/Elizabeth ל-St Paul's או Blackfriars והליכה דרך גשר המילניום — הכניסה הכי יפה למוזיאון.</div>
+        <div class="tags"><span class="tag tube">🚇 + גשר המילניום</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">בוקר</div>
+        <h3>🎨 Tate Modern</h3>
+        <div class="desc">שלוש תערוכות חזקות: <b>Frida: The Making of an Icon</b> (הלהיט — להזמין מראש!), <b>Julio Le Parc</b> — אור וקינטיקה אינטראקטיבית, ו-<b>Ana Mendieta</b>. האוסף הקבוע חינם.</div>
+        <div class="tags"><span class="tag"><a href="https://www.tate.org.uk/visit/tate-modern">כרטיסים ↗</a></span></div>
+        <a class="maplink" href="https://maps.google.com/?q=Tate+Modern+London">Bankside</a>
+      </div>
+      <div class="stop">
+        <div class="time">~13:30</div>
+        <h3>Borough Market 🧀</h3>
+        <div class="desc">15 דק׳ הליכה על הגדה. צהריים בשוק האוכל המיתולוגי — ביום שלישי פתוח ופחות עמוס משבת.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Borough+Market+London">Borough Market</a>
+      </div>
+      <div class="stop">
+        <div class="time">אחה״צ</div>
+        <h3>Somerset House</h3>
+        <div class="desc">חוצים את הנהר בחזרה (גשר ווטרלו). החצר הנאו-קלאסית, מיצב הווידאו החדש <b>Enclosure</b> באגף החדש, וגלריית Courtauld לחובבי אימפרסיוניזם.</div>
+        <a class="maplink" href="https://maps.google.com/?q=Somerset+House+London">Strand</a>
+      </div>
+      <div class="stop">
+        <div class="time">17:00</div>
+        <h3>ארוחת ערב מוקדמת וקלילה</h3>
+        <div class="desc">משהו זריז באזור קובנט גארדן / הסטרנד — לא כבד מדי, יש דרינקים במועדון לפני ההצגה.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">18:00</div>
+        <h3>הגעה ל-Kit Kat Club</h3>
+        <div class="desc">Playhouse Theatre, ליד תחנת Embankment — 10 דק׳ הליכה מ-Somerset House. מומלץ להגיע מוקדם: המועדון נפתח לפני ההצגה עם <b>מופע קדם</b> ואווירת קברט אמיתית — זה חלק מהחוויה!</div>
+        <a class="maplink" href="https://maps.google.com/?q=Playhouse+Theatre+Northumberland+Avenue+London">Northumberland Ave</a>
+      </div>
+      <div class="stop big">
+        <div class="time">19:00</div>
+        <h3>🎭 Cabaret at the Kit Kat Club</h3>
+        <div class="desc">המחזמר הזוכה — הפקה אימרסיבית בתוך "מועדון" ברלינאי. מסתיים ~21:45, ומשם 15 דק׳ הליכה הביתה דרך לסטר סקוור.</div>
+        <div class="seatcard">
+          <span>Stalls</span><span>שורה <b>EE</b></span><span>🎫 ×2 · הברקוד נסרק רק 24 שע׳ לפני</span>
+        </div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=St+Pauls+Cathedral+London&destination=Playhouse+Theatre+London&waypoints=Millennium+Bridge+London%7CTate+Modern+London%7CBorough+Market+London%7CSomerset+House+London&travelmode=walking">🗺️ מסלול הגדה הדרומית ברגל</a>
+    </div>
+  </section>
+
+  <!-- ============ DAY 6 ============ -->
+  <section class="panel" id="d6" style="--c:var(--victoria)">
+    <div class="dayhead">
+      <span class="eyebrow">יום יציאה</span>
+      <h2>בוקר אחרון וטיסה הביתה</h2>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">בוקר</div>
+        <h3>קפה ופרידה מסוהו ☕</h3>
+        <div class="desc">ארוחת בוקר רגועה, קניות אחרונות בקרנבי או ליברטי (חנות הכלבו היפה בלונדון, 3 דק׳ מהדירה).</div>
+      </div>
+      <div class="stop">
+        <div class="time">11:45</div>
+        <h3>צ׳ק-אאוט ויציאה להית׳רו</h3>
+        <div class="desc">Elizabeth Line או קו Piccadilly — <b>לוודא שהרכבת מגיעה לטרמינל 4!</b> ~60 דק׳ נסיעה.</div>
+        <div class="tags"><span class="tag tube">🚇 Heathrow T4</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">15:15</div>
+        <h3>✈️ LY316 לונדון → תל אביב</h3>
+        <div class="desc">אל על, טרמינל 4. נחיתה בנתב״ג 22:00.</div>
+        <div class="seatcard"><span>טיסה <b>LY316</b></span><span>טרמינל <b>4</b></span><span>נחיתה <b>22:00</b></span></div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=79+Beak+Street+London&destination=Heathrow+Terminal+4&travelmode=transit">🚇 להית׳רו טרמינל 4</a>
+    </div>
+  </section>
+
+  </main>
+
+</div>
+
+<!-- ================= VIEW: FOOD ================= -->
+<div class="view" id="view-food">
+  <main style="padding:20px 18px">
+    <h2 style="font-family:'Rubik';font-weight:800;font-size:23px;margin-bottom:16px">מסעדות 🍽️</h2>
+
+    <div class="card">
+      <h3>🥟 Yauatcha Soho</h3>
+      <div class="sub">דים־סאם קנטונזי · כוכב מישלן · Broadwick St 15</div>
+      <p>המוסד של סוהו לדים־סאם. חובה: ה-venison puffs וה-scallop shui mai. גם הקינוחים־מאפים שלהם מפורסמים.</p>
+      <span class="walk">🚶 2 דקות מהדירה</span>
+      <div class="btnrow">
+        <a class="btn solid" href="https://www.yauatcha.com">להזמין מקום</a>
+        <a class="btn ghost" href="https://maps.google.com/?q=Yauatcha+Soho+London">ניווט</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🇮🇳 Dishoom Carnaby</h3>
+      <div class="sub">הודית בסגנון בתי הקפה של בומביי · Kingly St 22</div>
+      <p>חובה: black daal, chicken ruby, ה-naan עם גבינה. לזוגות בערב לרוב walk-in עם תור — להגיע ~17:30 או לבדוק סלוטים באתר. גם ארוחת בוקר שם מצוינת (bacon naan!).</p>
+      <span class="walk">🚶 2 דקות מהדירה</span>
+      <div class="btnrow">
+        <a class="btn solid" href="https://www.dishoom.com/carnaby">בדיקת הזמנות</a>
+        <a class="btn ghost" href="https://maps.google.com/?q=Dishoom+Carnaby+London">ניווט</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔥 The Barbary</h3>
+      <div class="sub">אש פתוחה, השפעות צפון־אפריקאיות וים־תיכוניות · Neal's Yard 16</div>
+      <p>מהצוות של The Palomar. ישיבה על בר עגול סביב הגריל — חוויה. מקומות מוגבלים, להזמין כמה שיותר מוקדם — לערב שני 21.9.</p>
+      <span class="walk">🚶 12 דקות · דרך קובנט גארדן</span>
+      <div class="btnrow">
+        <a class="btn solid" href="https://www.thebarbary.co.uk">להזמין מקום</a>
+        <a class="btn ghost" href="https://maps.google.com/?q=The+Barbary+Neals+Yard+London">ניווט</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🇯🇵 ROKA Mayfair</h3>
+      <div class="sub">יפנית עכשווית · גריל רובאטה פתוח · North Audley St 30</div>
+      <p>המלצה שקיבלתם — ובצדק. ישיבה סביב הרובאטה היא החוויה. חובה: black cod, צלעות טלה בקוריאנדר, והדגוסטציה של הקינוחים. להזמין מראש — מבוקשת מאוד בערבים.</p>
+      <span class="walk">🚶 ~15 דקות · דרך מייפייר, ליד Grosvenor Square</span>
+      <div class="btnrow">
+        <a class="btn solid" href="https://rokarestaurant.com">להזמין מקום</a>
+        <a class="btn ghost" href="https://maps.google.com/?q=ROKA+Mayfair+North+Audley+Street+London">ניווט</a>
+      </div>
+    </div>
+
+    <h2 style="font-family:'Rubik';font-weight:800;font-size:19px;margin:22px 0 12px">☕ ארוחת בוקר ליד הדירה</h2>
+
+    <div class="card">
+      <h3>🥓 Dishoom Carnaby — ארוחת הבוקר</h3>
+      <div class="sub">Kingly St · פתוח מ-8:00 (9:00 בסופ״ש)</div>
+      <p>אחת מארוחות הבוקר המפורסמות בלונדון: <b>bacon naan roll</b>, ביצים הודיות, וצ׳אי ללא הגבלה. בבוקר אין תורים כמו בערב — הזמן הכי טוב לתפוס אותם.</p>
+      <span class="walk">🚶 2 דקות</span>
+    </div>
+
+    <div class="card">
+      <h3>🍳 The Breakfast Club Soho</h3>
+      <div class="sub">D'Arblay St 33 · מוסד לונדוני</div>
+      <p>הקלאסיקה: פנקייקים, אגס בנדיקט, full English ענק. עליז, רועש וכיפי. בסופ״ש נהיה תור — לבוא לפני 9:30.</p>
+      <span class="walk">🚶 4 דקות</span>
+    </div>
+
+    <div class="card">
+      <h3>☕ Bar Italia</h3>
+      <div class="sub">Frith St 22 · מאז 1949</div>
+      <p>מוסד האספרסו של סוהו — בר איטלקי אמיתי, פתוח כמעט תמיד. לקפה של בוקר עם קרואסון ותצפית אנשים, בלי פוזות.</p>
+      <span class="walk">🚶 6 דקות</span>
+    </div>
+
+    <h2 style="font-family:'Rubik';font-weight:800;font-size:19px;margin:22px 0 12px">🍕 ערב קז׳ואל ופיצה</h2>
+
+    <div class="card">
+      <h3>🥩 Flat Iron</h3>
+      <div class="sub">Beak St 17 — הרחוב שלכם!</div>
+      <p>סטייק flat iron מעולה במחיר מצחיק (~£15), עם פופקורן בכניסה וגלידה בסוף. בלי הזמנות — פשוט יורדים במדרגות מהדירה ונכנסים. אם יש תור, נותנים שם ומחכים בפאב ליד.</p>
+      <span class="walk">🚶 דקה אחת 😄</span>
+    </div>
+
+    <div class="card">
+      <h3>🍕 Pizza Pilgrims</h3>
+      <div class="sub">Dean St 11 · נאפוליטנית</div>
+      <p>מהפיצריות האהובות בלונדון — נולדה בסוהו. בצק נאפוליטני רך, מרגריטה מושלמת, nduja למי שאוהב חריף. מהירה, זולה יחסית וטעימה מאוד.</p>
+      <span class="walk">🚶 5 דקות</span>
+    </div>
+
+    <div class="card">
+      <h3>🍕 Princi</h3>
+      <div class="sub">Wardour St 135 · מאפייה מילאנזית</div>
+      <p>מאפייה-מסעדה איטלקית מהממת: פיצה al taglio (במשקל), פוקאצ׳ות, פסטות וקינוחים בתצוגה שאי אפשר לעמוד בפניה. מושלם לערב קליל או צהריים.</p>
+      <span class="walk">🚶 4 דקות</span>
+    </div>
+
+    <div class="card">
+      <h3>🍜 צ׳יינה-טאון</h3>
+      <div class="sub">Gerrard St · 5 דקות</div>
+      <p>לערבים מאוחרים (אחרי אבבא/קברט): המון פתוח עד חצות ואחרי. מומלץ: <b>Four Seasons</b> לברווז הצלוי המפורסם, או דים-סאם ב-<b>Golden Dragon</b>.</p>
+      <span class="walk">🚶 5 דקות</span>
+    </div>
+
+    <div class="card">
+      <h3>💡 רזרבות ליד הבית</h3>
+      <p><b>Kiln</b> (תאילנדית על אש, Brewer St) · <b>Bao Soho</b> (באנים טייוואניים, Lexington St) · <b>Berenjak</b> (פרסית, Romilly St) · צ׳יינה־טאון לערב מאוחר אחרי אבבא. כולן עד 7 דקות הליכה.</p>
+    </div>
+  </main>
+</div>
+
+<!-- ================= VIEW: CHECKLIST ================= -->
+<div class="view" id="view-todo">
+  <main style="padding:20px 18px">
+    <h2 style="font-family:'Rubik';font-weight:800;font-size:23px;margin-bottom:14px">כלים ומשימות ✅</h2>
+
+    <div class="fxcard">
+      <h3>💷 המרת מטבע — פאונד ⇄ שקל</h3>
+      <div class="fxrow">
+        <span class="fxlabel">£</span><input type="number" id="fxgbp" placeholder="0" inputmode="decimal">
+        <span class="fxlabel">=</span>
+        <input type="number" id="fxils" placeholder="0" inputmode="decimal"><span class="fxlabel">₪</span>
+      </div>
+      <div class="fxtable" id="fxtable"></div>
+      <div class="fxnote" id="fxnote">שער משוער — נטען שער עדכני כשיש אינטרנט</div>
+    </div>
+
+    <p style="color:var(--muted);font-size:13.5px;font-weight:300;margin-bottom:14px">משימות · הסימונים נשמרים בטלפון הזה</p>
+
+    <div class="card" id="checklist">
+      <div class="check" data-k="c1"><div class="box">✓</div><div class="txt">קברט 🎭 — הברקודים נסרקים רק 24 שע׳ לפני<small>שלישי 22.9 · 19:00 · להגיע 18:00 למופע הקדם · <a href="https://ticket.londontheatre.co.uk" style="color:#0019A8">הכרטיסים באתר London Theatre</a></small></div></div>
+      <div class="check" data-k="c2"><div class="box">✓</div><div class="txt">להזמין שולחן ב-The Barbary<small>לערב שני 21.9 · <a href="https://www.thebarbary.co.uk" style="color:#0019A8">להזמנה באתר The Barbary</a></small></div></div>
+      <div class="check" data-k="c11"><div class="box">✓</div><div class="txt">להזמין שולחן ב-ROKA Mayfair<small>לערב שבת 19.9 · <a href="https://rokarestaurant.com" style="color:#0019A8">להזמנה באתר ROKA</a></small></div></div>
+      <div class="check" data-k="c12"><div class="box">✓</div><div class="txt">להוריד מדריכים קוליים 🎧<small><a href="https://app.bloombergconnects.org" style="color:#0019A8">Bloomberg Connects</a> (חינם — Tate, V&A ופסטיבל העיצוב) · <a href="https://voicemap.me/tour/london/hyde-park-and-kensington-gardens-royalty-relaxation-and-rebellion" style="color:#0019A8">VoiceMap הייד פארק</a> (~$12, להוריד מראש ב-WiFi) · <a href="https://voicemap.me/tour/london" style="color:#0019A8">עוד סיורי VoiceMap</a></small></div></div>
+      <div class="check" data-k="c3"><div class="box">✓</div><div class="txt">להזמין שולחן ב-Yauatcha<small>לערב שישי 18.9 · <a href="https://www.yauatcha.com" style="color:#0019A8">להזמנה באתר Yauatcha</a></small></div></div>
+      <div class="check" data-k="c4"><div class="box">✓</div><div class="txt">כרטיסים לפרידה קאלו ב-Tate Modern<small>ליום שלישי 22.9 בבוקר — מתמלא · <a href="https://www.tate.org.uk/visit/tate-modern" style="color:#0019A8">כרטיסים באתר Tate</a></small></div></div>
+      <div class="check" data-k="c5"><div class="box">✓</div><div class="txt">כרטיסים ל-Moco Museum<small>יום שני 21.9 אחה״צ · <a href="https://mocomuseum.com/london" style="color:#0019A8">כרטיסים באתר Moco (זול מבקופה)</a></small></div></div>
+      <div class="check" data-k="c6"><div class="box">✓</div><div class="txt">לוודא הזמנת דירה 18–23.9<small>5 לילות · Modern Carnaby Soho · <a href="https://secure.booking.com/mybooking.html" style="color:#0019A8">ההזמנות שלי ב-Booking</a></small></div></div>
+      <div class="check" data-k="c7"><div class="box">✓</div><div class="txt">אפליקציית AXS מותקנת ומחוברת אצל חגית<small>כרטיסי אבבא — צילום מסך לא עובד בכניסה · <a href="https://www.axs.com/uk" style="color:#0019A8">אתר AXS</a></small></div></div>
+      <div class="check" data-k="c8"><div class="box">✓</div><div class="txt">רישום EES ביומטרי בכניסה לאירופה<small>המערכת החדשה בגבולות האיחוד — בציריך, לתכנן זמן · <a href="https://travel-europe.europa.eu/ees" style="color:#0019A8">מידע רשמי EES</a></small></div></div>
+      <div class="check" data-k="c9"><div class="box">✓</div><div class="txt">כרטיס אשראי contactless לנסיעות<small>מקישים בכניסה וביציאה מהטיוב — אין צורך ב-Oyster · <a href="https://tfl.gov.uk/fares/how-to-pay-and-where-to-buy-tickets-and-oyster" style="color:#0019A8">מדריך TfL</a></small></div></div>
+      <div class="check" data-k="c10"><div class="box">✓</div><div class="txt">צ׳ק-אין אונליין לטיסות<small>BA — 24 שע׳ לפני: <a href="https://www.britishairways.com/travel/managebooking/public/en_gb" style="color:#0019A8">Manage My Booking</a> · אל על: <a href="https://www.elal.com/en/manage-booking" style="color:#0019A8">ניהול הזמנה</a></small></div></div>
+    </div>
+  </main>
+</div>
+
+<!-- ================= VIEW: WEATHER ================= -->
+<div class="view" id="view-weather">
+  <main style="padding:20px 18px">
+    <h2 style="font-family:'Rubik';font-weight:800;font-size:23px;margin-bottom:4px">מזג האוויר בלונדון ⛅</h2>
+    <p style="color:var(--muted);font-size:13px;font-weight:300;margin-bottom:14px">תחזית ל-7 ימים · מתעדכן בכל פתיחה · דורש אינטרנט</p>
+    <div id="weatherbox"><div class="wstatus">לחיצה על הטאב טוענת תחזית...</div></div>
+  </main>
+</div>
+
+<!-- ================= VIEW: MAP ================= -->
+<div class="view" id="view-map">
+  <main style="padding:16px 14px">
+    <h2 style="font-family:'Rubik';font-weight:800;font-size:23px;margin-bottom:4px">מפת הטיול 🗺️</h2>
+    <p style="color:var(--muted);font-size:13px;font-weight:300">כל התחנות לפי צבע היום · דורש אינטרנט</p>
+    <div class="legend" id="maplegend">
+      <button class="lgbtn active" data-day="all" style="--c:#1C1C1B">הכול</button>
+      <button class="lgbtn" data-day="0" style="--c:#6950A1"><i></i>ו׳ 18.9</button>
+      <button class="lgbtn" data-day="1" style="--c:#DC241F"><i></i>ש׳ 19.9</button>
+      <button class="lgbtn" data-day="2" style="--c:#007D32"><i></i>א׳ 20.9</button>
+      <button class="lgbtn" data-day="3" style="--c:#0019A8"><i></i>ב׳ 21.9</button>
+      <button class="lgbtn" data-day="4" style="--c:#7C868D"><i></i>ג׳ 22.9</button>
+      <button class="fsbtn" id="fsbtn">⛶ מסך מלא</button>
+    </div>
+    <button id="fsclose">✕ חזרה</button>
+    <div id="map"></div>
+  </main>
+</div>
+
+<footer>נבנה עם קלוד · ספטמבר 2026 · נסיעה טובה! ✈️ · גרסה 3.2</footer>
+
+<button class="backhome" id="backhome">🚇 חזרה למסלול</button>
+
+<!-- bottom navigation -->
+<div class="bottomnav">
+  <button class="bn active" data-view="view-days"><span class="ic">🚇</span>מסלול</button>
+  <button class="bn" data-view="view-food"><span class="ic">🍽️</span>אוכל</button>
+  <button class="bn" data-view="view-map"><span class="ic">🗺️</span>מפה</button>
+  <button class="bn" data-view="view-weather"><span class="ic">⛅</span>מזג אוויר</button>
+  <button class="bn" data-view="view-todo"><span class="ic">✅</span>משימות</button>
+</div>
+
+<script>
+// ---- force refresh: bypass cache with a unique query param ----
+document.getElementById('refreshbtn').addEventListener('click',()=>{
+  const btn=document.getElementById('refreshbtn');
+  btn.textContent='⏳ מרענן...';
+  window.location.href = window.location.pathname + '?r=' + Date.now();
+});
+// ---- standalone (home screen app) detection ----
+if (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches) {
+  document.body.classList.add('standalone');
+}
+// ---- day tabs ----
+document.querySelectorAll('.daychip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.daychip').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+    chip.classList.add('active');
+    document.getElementById(chip.dataset.day).classList.add('show');
+    window.scrollTo({top:0});
+  });
+});
+// ---- bottom nav ----
+document.querySelectorAll('.bn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.bn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('show'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.view).classList.add('show');
+    document.getElementById('backhome').style.display = (btn.dataset.view==='view-map') ? 'block' : 'none';
+    if(btn.dataset.view!=='view-map') setMapFS(false);
+    window.scrollTo({top:0});
+  });
+});
+document.getElementById('backhome').addEventListener('click',()=>{
+  document.querySelector('.bn[data-view="view-days"]').click();
+});
+// ---- checklist with graceful persistence ----
+const store = {
+  get(k){ try{ return localStorage.getItem('ldn26_'+k)==='1'; }catch(e){ return !!this._m&&this._m[k]; } },
+  set(k,v){ try{ localStorage.setItem('ldn26_'+k, v?'1':'0'); }catch(e){ this._m=this._m||{}; this._m[k]=v; } }
+};
+document.querySelectorAll('.check').forEach(row=>{
+  const k=row.dataset.k;
+  if(store.get(k)) row.classList.add('done');
+  row.addEventListener('click',()=>{
+    row.classList.toggle('done');
+    store.set(k,row.classList.contains('done'));
+  });
+});
+// ---- "now in plan" card + countdown ----
+const tripSchedule={
+ '2026-09-18':[['12:35','נחיתה בהית׳רו T5 ✈️'],['14:30','צ׳ק-אין בדירה'],['16:30','סיבוב היכרות בסוהו'],['19:30','ארוחת ערב — Yauatcha/Dishoom']],
+ '2026-09-19':[['09:30','יציאה לשורדיץ׳ 🚇'],['10:00','Old Spitalfields Market'],['11:15','Truman Brewery והשווקים'],['12:45','Beigel Bake 🥯'],['14:00','משולש העיצוב'],['15:30','Boxpark 🍺'],['19:00','ערב — ROKA?']],
+ '2026-09-20':[['10:30','Saatchi + פסטיבל צ׳לסי'],['13:00','Battersea Park 🌳'],['15:30','מנוחה בדירה'],['16:45','יציאה ל-ABBA! 🚇'],['18:00','ABBA Voyage 🎤'],['21:00','ערב בסוהו']],
+ '2026-09-21':[['10:45','V&A — סקיאפרלי 🎫'],['13:00','צהריים בסאות׳ קנזינגטון'],['15:30','Moco Museum 🖌️'],['17:00','הייד פארק 🎧 (אופציונלי)'],['20:00','The Barbary 🔥']],
+ '2026-09-22':[['10:30','Tate Modern 🎨'],['13:30','Borough Market 🧀'],['15:30','Somerset House'],['17:00','ארוחה קלה'],['18:00','הגעה ל-Kit Kat Club'],['19:00','קברט 🎭']],
+ '2026-09-23':[['09:00','בוקר אחרון בסוהו ☕'],['11:45','יציאה להית׳רו 🚇'],['15:15','טיסה הביתה ✈️']]
+};
+function renderNowCard(){
+  const el=document.getElementById('nowcard');
+  const now=new Date();
+  const tzNow=new Date(now.toLocaleString('en-US',{timeZone:'Europe/London'}));
+  const y=tzNow.getFullYear(),m=String(tzNow.getMonth()+1).padStart(2,'0'),d=String(tzNow.getDate()).padStart(2,'0');
+  const today=y+'-'+m+'-'+d;
+  const tripStart=new Date('2026-09-18T00:00:00'), tripEnd=new Date('2026-09-23T23:59:59');
+  if(now<tripStart){
+    const days=Math.ceil((tripStart-now)/(1000*60*60*24));
+    el.innerHTML='<div class="nc-top">⏳ ספירה לאחור</div><div class="nc-main">עוד '+days+' ימים ללונדון!</div><div class="nc-sub">שישי 18.9 · נחיתה 12:35 בהית׳רו</div>';
+    el.style.display='block';return;
+  }
+  if(now>tripEnd){
+    el.innerHTML='<div class="nc-top">🏠 חזרתם</div><div class="nc-main">מקווה שנהניתם! 🎉</div><div class="nc-sub">תזכורת: למחוק את הריפו בגיטהאב 😉</div>';
+    el.style.display='block';return;
+  }
+  const sched=tripSchedule[today]||[];
+  const dayNum=Math.floor((tzNow-new Date('2026-09-18T00:00:00'))/(1000*60*60*24))+1;
+  const nowMin=tzNow.getHours()*60+tzNow.getMinutes();
+  let cur=null,next=null;
+  for(const s of sched){
+    const[t,title]=s; const[h,mm]=t.split(':').map(Number); const tm=h*60+mm;
+    if(tm<=nowMin)cur=s; else if(!next)next=s;
+  }
+  let sub='';
+  if(cur)sub+='עכשיו: <b>'+cur[1]+'</b>';
+  if(next)sub+=(sub?'<br>':'')+'הבא: <b>'+next[1]+'</b> ב-'+next[0];
+  if(!sub)sub='יום חופשי בתוכנית — תיהנו!';
+  el.innerHTML='<div class="nc-top">📍 יום '+dayNum+' מתוך 6 · שעון לונדון '+String(tzNow.getHours()).padStart(2,'0')+':'+String(tzNow.getMinutes()).padStart(2,'0')+'</div><div class="nc-main">היום בתוכנית</div><div class="nc-sub">'+sub+'</div>';
+  el.style.display='block';
+}
+renderNowCard();
+setInterval(renderNowCard,60000);
+
+// ---- currency converter (Frankfurter, no key; static fallback) ----
+let fxRate=4.7, fxLive=false;
+function fxRender(){
+  const t=document.getElementById('fxtable');
+  t.innerHTML=[1,5,10,20,50,100].map(v=>'<span>£'+v+' ≈ ₪'+Math.round(v*fxRate)+'</span>').join('');
+  document.getElementById('fxnote').textContent = fxLive
+    ? ('שער עדכני: £1 = ₪'+fxRate.toFixed(2)+' · Frankfurter/ECB')
+    : ('שער משוער: £1 = ₪'+fxRate.toFixed(2)+' — נטען שער עדכני כשיש אינטרנט');
+}
+async function fxLoad(){
+  try{
+    const r=await fetch('https://api.frankfurter.dev/v1/latest?base=GBP&symbols=ILS');
+    const d=await r.json();
+    if(d&&d.rates&&d.rates.ILS){fxRate=d.rates.ILS;fxLive=true;}
+  }catch(e){}
+  fxRender();
+}
+document.getElementById('fxgbp').addEventListener('input',e=>{
+  const v=parseFloat(e.target.value);
+  document.getElementById('fxils').value=isNaN(v)?'':(v*fxRate).toFixed(1);
+});
+document.getElementById('fxils').addEventListener('input',e=>{
+  const v=parseFloat(e.target.value);
+  document.getElementById('fxgbp').value=isNaN(v)?'':(v/fxRate).toFixed(1);
+});
+fxRender(); fxLoad();
+
+// ---- weather (Open-Meteo, no key needed) ----
+let weatherLoaded=false;
+async function loadWeather(){
+  const box=document.getElementById('weatherbox');
+  box.innerHTML='<div class="wstatus">טוען תחזית... ⏳</div>';
+  const desc={0:['☀️','בהיר'],1:['🌤️','בהיר ברובו'],2:['⛅','מעונן חלקית'],3:['☁️','מעונן'],45:['🌫️','ערפל'],48:['🌫️','ערפל'],
+    51:['🌦️','טפטוף קל'],53:['🌦️','טפטוף'],55:['🌧️','טפטוף כבד'],61:['🌦️','גשם קל'],63:['🌧️','גשם'],65:['🌧️','גשם כבד'],
+    66:['🌧️','גשם קפוא'],67:['🌧️','גשם קפוא'],71:['🌨️','שלג קל'],73:['🌨️','שלג'],75:['❄️','שלג כבד'],77:['🌨️','פתיתי שלג'],
+    80:['🌦️','ממטרים קלים'],81:['🌧️','ממטרים'],82:['⛈️','ממטרים עזים'],85:['🌨️','ממטרי שלג'],86:['🌨️','ממטרי שלג'],
+    95:['⛈️','סופת רעמים'],96:['⛈️','סופת ברד'],99:['⛈️','סופת ברד']};
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5072&longitude=-0.1276&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FLondon&forecast_days=7');
+    const d=await r.json();
+    const days=d.daily;
+    let out='';
+    for(let i=0;i<days.time.length;i++){
+      const dt=new Date(days.time[i]+'T12:00:00');
+      const wd=i===0?'היום':(i===1?'מחר':dt.toLocaleDateString('he-IL',{weekday:'long'}));
+      const date=dt.toLocaleDateString('he-IL',{day:'numeric',month:'numeric'});
+      const w=desc[days.weather_code[i]]||['🌡️',''];
+      const rain=days.precipitation_probability_max[i];
+      out+='<div class="wcard'+(i===0?' today':'')+'">'
+        +'<div class="emoji">'+w[0]+'</div>'
+        +'<div><div class="wday">'+wd+'</div><div class="wdate">'+date+'</div><div class="wdesc">'+w[1]+'</div></div>'
+        +'<div class="temps"><div class="tmax">'+Math.round(days.temperature_2m_max[i])+'°</div>'
+        +'<div class="tmin">'+Math.round(days.temperature_2m_min[i])+'°</div>'
+        +(rain>=20?'<div class="rain">💧 '+rain+'%</div>':'')
+        +'</div></div>';
+    }
+    box.innerHTML=out+'<div class="wstatus" style="padding:10px 0;font-size:12px">מקור: Open-Meteo · לונדון</div>';
+    weatherLoaded=true;
+  }catch(e){
+    box.innerHTML='<div class="wstatus">לא הצלחתי לטעון תחזית 😕<br>בדקו חיבור אינטרנט ונסו שוב</div>';
+  }
+}
+document.querySelector('.bn[data-view="view-weather"]').addEventListener('click',loadWeather);
+
+// ---- leaflet map (lazy init) ----
+let mapObj=null, dayLayers=[], allBounds=null;
+function initMap(){
+  if(mapObj || typeof L==='undefined') { if(mapObj) setTimeout(()=>mapObj.invalidateSize(),80); return; }
+  const home=[51.5127,-0.13793];
+  mapObj=L.map('map',{zoomControl:true}).setView([51.508,-0.11],12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(mapObj);
+  const days=[
+    {c:'#6950A1',n:'ו׳ 18.9',pts:[
+      [51.5127,-0.13793,'🏠 הדירה — 79 Beak St','הבסיס שלכם, Modern Carnaby Soho'],
+      [51.5131862,-0.1388548,'Carnaby Street','דקה מהדלת'],
+      [51.5138717,-0.1400263,'Liberty','חנות הכלבו הטיודורית'],
+      [51.5098597,-0.1342809,'Piccadilly Circus','השלטים המפורסמים'],
+      [51.5117744,-0.1311506,'Chinatown','ערב ראשון']]},
+    {c:'#DC241F',n:'ש׳ 19.9',pts:[
+      [51.5196569,-0.0755469,'Old Spitalfields Market','10:00 — פתיחת היום'],
+      [51.5205,-0.0710,'Fashion St + Hanbury St','10:45 — סטריט-ארט'],
+      [51.5220,-0.0721,'Truman Brewery','11:15 — Backyard + Vintage Market'],
+      [51.5246,-0.07147,'Beigel Bake','12:45 — בייגל salt beef 🥯'],
+      [51.5240,-0.0733,'Redchurch Street','13:15 — קונספט + Allpress'],
+      [51.5262,-0.0810,'משולש העיצוב','14:00 — Rivington / Charlotte / Great Eastern'],
+      [51.5234723,-0.0757539,'BOXPARK','15:30 — דרינק'],
+      [51.5288,-0.0699,'Columbia Road','16:30 — אופציה לסיום']]},
+    {c:'#007D32',n:'א׳ 20.9',pts:[
+      [51.4906972,-0.1587165,'Saatchi Gallery','Chelsea Arts Festival — יום אחרון'],
+      [51.4822164,-0.1666632,'Albert Bridge','הגשר הכי יפה בלונדון'],
+      [51.4791075,-0.1564981,'Battersea Park','הפגודה והגנים'],
+      [51.4820203,-0.1444907,'Battersea Power Station','אופציונלי'],
+      [51.5329369,-0.0135085,'🎤 ABBA Arena','18:00 · Gate A · בלוק D שורה B']]},
+    {c:'#0019A8',n:'ב׳ 21.9',pts:[
+      [51.4966392,-0.17218,'V&A — סקיאפרלי','כניסה 10:45 🎫'],
+      [51.5134632,-0.1593655,'Moco Museum','~15:30, 60–90 דק׳'],
+      [51.5085,-0.1657,'הייד פארק 🎧','~17:00 — סיור קולי VoiceMap (אופציונלי)'],
+      [51.5144724,-0.1263531,'The Barbary — Neal\'s Yard','ערב 20:00 🔥']]},
+    {c:'#7C868D',n:'ג׳ 22.9',pts:[
+      [51.5095291,-0.0985425,'Millennium Bridge','הכניסה היפה ל-Tate'],
+      [51.5075953,-0.0993564,'Tate Modern','פרידה קאלו + Le Parc 🎫'],
+      [51.5055826,-0.0904808,'Borough Market','צהריים בשוק'],
+      [51.511059,-0.117148,'Somerset House','החצר + Enclosure'],
+      [51.5069,-0.1236,'🎭 Cabaret — Kit Kat Club','שלישי 19:00 · להגיע 18:00']]}
+  ];
+  allBounds=L.latLngBounds([home]);
+  days.forEach((d,idx)=>{
+    const group=L.layerGroup();
+    const line=d.pts.map(p=>[p[0],p[1]]);
+    L.polyline(line,{color:d.c,weight:3,opacity:.55,dashArray:'6 6'}).addTo(group);
+    d.pts.forEach(p=>{
+      L.circleMarker([p[0],p[1]],{radius:8,color:d.c,weight:3,fillColor:'#fff',fillOpacity:1})
+        .addTo(group).bindPopup('<b>'+p[2]+'</b><br>'+d.n+' · '+p[3]);
+      allBounds.extend([p[0],p[1]]);
+    });
+    group.addTo(mapObj);
+    dayLayers.push({group:group, bounds:L.latLngBounds(line)});
+  });
+  L.circleMarker(home,{radius:10,color:'#1C1C1B',weight:3,fillColor:'#FFD700',fillOpacity:1}).addTo(mapObj).bindPopup('<b>🏠 הדירה</b>');
+  setTimeout(()=>mapObj.invalidateSize(),120);
+}
+function showDay(which){
+  if(!mapObj)return;
+  dayLayers.forEach((dl,idx)=>{
+    if(which==='all' || idx===Number(which)){ dl.group.addTo(mapObj); }
+    else{ mapObj.removeLayer(dl.group); }
+  });
+  const b=(which==='all')?allBounds:dayLayers[Number(which)].bounds;
+  setTimeout(()=>{ mapObj.invalidateSize(); mapObj.fitBounds(b,{padding:[36,36]}); },80);
+}
+function setMapFS(on){
+  document.body.classList.toggle('mapfs',on);
+  setTimeout(()=>{ if(mapObj) mapObj.invalidateSize(); },120);
+}
+document.getElementById('fsbtn').addEventListener('click',()=>{ initMap(); setMapFS(true); });
+document.getElementById('fsclose').addEventListener('click',()=>setMapFS(false));
+document.querySelectorAll('.lgbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.lgbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    showDay(btn.dataset.day);
+  });
+});
+document.querySelector('.bn[data-view="view-map"]').addEventListener('click',initMap);
+
+// ---- auto-open today's day if within trip ----
+(function(){
+  const map={'2026-09-18':'d1','2026-09-19':'d2','2026-09-20':'d3','2026-09-21':'d4','2026-09-22':'d5','2026-09-23':'d6'};
+  const today=new Date().toISOString().slice(0,10);
+  if(map[today]){
+    const chip=document.querySelector('.daychip[data-day="'+map[today]+'"]');
+    if(chip) chip.click();
+  }
+})();
+</script>
+</body>
+</html>
