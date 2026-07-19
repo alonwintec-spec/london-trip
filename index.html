@@ -307,7 +307,7 @@
       <h1>אלון וחגית בלונדון</h1>
       <div class="dates">שישי 18.9 – רביעי 23.9.2026 · 5 לילות</div>
     </div>
-    <button class="refreshbtn" id="refreshbtn">🔄 3.8</button>
+    <button class="refreshbtn" id="refreshbtn">🔄 3.9</button>
   </div>
   <div class="homebase">🏠 הבסיס: Modern Carnaby Soho · 79 Beak St, W1F 9SU ·
     <a href="https://maps.google.com/?q=79+Beak+Street+London+W1F+9SU">מפה</a>
@@ -854,11 +854,15 @@
       <button class="fsbtn" id="fsbtn">⛶ מסך מלא</button>
     </div>
     <button id="fsclose">✕ חזרה</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:4px 0 10px;flex-wrap:wrap">
+      <button id="dltiles" style="font-family:'Rubik';font-weight:600;font-size:13px;background:var(--piccadilly);color:#fff;border:none;border-radius:999px;padding:8px 15px;cursor:pointer">⬇️ הורדת המפה לאופליין</button>
+      <span id="dlstatus" style="font-size:12.5px;color:var(--muted);font-weight:300"></span>
+    </div>
     <div id="map"></div>
   </main>
 </div>
 
-<footer>נבנה עם קלוד · ספטמבר 2026 · נסיעה טובה! ✈️ · גרסה 3.8</footer>
+<footer>נבנה עם קלוד · ספטמבר 2026 · נסיעה טובה! ✈️ · גרסה 3.9</footer>
 
 <button class="backhome" id="backhome">🚇 חזרה למסלול</button>
 
@@ -1043,7 +1047,7 @@ function initMap(){
   if(mapObj || typeof L==='undefined') { if(mapObj) setTimeout(()=>mapObj.invalidateSize(),80); return; }
   const home=[51.5127,-0.13793];
   mapObj=L.map('map',{zoomControl:true}).setView([51.508,-0.11],12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(mapObj);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(mapObj);
   const days=[
     {c:'#6950A1',n:'ו׳ 18.9',pts:[
       [51.5127,-0.13793,'🏠 הדירה — 79 Beak St','~14:30 צ׳ק-אין','דירת חדר עם מיזוג בלב סוהו — דקה מקרנבי, 5 דק׳ מפיקדילי. הבסיס לכל הטיול.'],
@@ -1124,6 +1128,70 @@ document.querySelectorAll('.lgbtn').forEach(btn=>{
   });
 });
 document.querySelector('.bn[data-view="view-map"]').addEventListener('click',initMap);
+
+// ---- offline: service worker + tile pre-download ----
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+function lon2x(lon,z){ return Math.floor((lon+180)/360*Math.pow(2,z)); }
+function lat2y(lat,z){ const r=lat*Math.PI/180; return Math.floor((1-Math.asinh(Math.tan(r))/Math.PI)/2*Math.pow(2,z)); }
+function tileList(){
+  // [south, north, west, east, zmin, zmax]
+  const boxes=[
+    [51.44,51.56,-0.25,0.05, 9,12],      // לונדון רבתי
+    [51.47,51.535,-0.18,-0.06,13,15],    // המרכז: סוהו–שורדיץ׳–סאות׳בנק–צ׳לסי
+    [51.525,51.54,-0.02,0.01,13,15],     // ABBA Arena
+    [51.46,51.48,-0.50,-0.44,12,14]      // הית׳רו T5
+  ];
+  const urls=new Set();
+  boxes.forEach(b=>{
+    for(let z=b[4];z<=b[5];z++){
+      const x0=lon2x(b[2],z),x1=lon2x(b[3],z),y0=lat2y(b[1],z),y1=lat2y(b[0],z);
+      for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++)
+        urls.add('https://tile.openstreetmap.org/'+z+'/'+x+'/'+y+'.png');
+    }
+  });
+  return [...urls];
+}
+async function downloadTiles(){
+  const btn=document.getElementById('dltiles'),st=document.getElementById('dlstatus');
+  if(!('caches' in window)){ st.textContent='הדפדפן לא תומך — נסו בספארי/כרום'; return; }
+  btn.disabled=true; btn.style.opacity=.6;
+  const urls=tileList();
+  const cache=await caches.open('ldn-tiles-v1');
+  let done=0,fail=0;
+  st.textContent='מוריד 0/'+urls.length+'...';
+  const CONC=4;
+  let idx=0;
+  async function worker(){
+    while(idx<urls.length){
+      const u=urls[idx++];
+      try{
+        if(!(await cache.match(u))){
+          const r=await fetch(u);
+          if(r.ok) await cache.put(u,r); else fail++;
+        }
+      }catch(e){ fail++; }
+      done++;
+      if(done%20===0||done===urls.length) st.textContent='מוריד '+done+'/'+urls.length+'...';
+    }
+  }
+  await Promise.all(Array.from({length:CONC},worker));
+  btn.disabled=false; btn.style.opacity=1;
+  if(fail===0){
+    btn.textContent='✅ המפה שמורה לאופליין';
+    st.textContent=urls.length+' אריחים נשמרו — המפה תעבוד גם בלי אינטרנט';
+    try{ localStorage.setItem('ldn26_tiles','1'); }catch(e){}
+  }else{
+    btn.textContent='⬇️ להשלים הורדה';
+    st.textContent=(done-fail)+' נשמרו, '+fail+' נכשלו — לחצו שוב להשלמה';
+  }
+}
+document.getElementById('dltiles').addEventListener('click',downloadTiles);
+try{
+  if(localStorage.getItem('ldn26_tiles')==='1'){
+    document.getElementById('dltiles').textContent='✅ המפה שמורה לאופליין';
+    document.getElementById('dlstatus').textContent='אפשר ללחוץ שוב לרענון האריחים';
+  }
+}catch(e){}
 
 // ---- auto-open today's day if within trip ----
 (function(){
