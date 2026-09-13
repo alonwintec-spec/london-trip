@@ -20,6 +20,7 @@
     --ink:#1C1C1B; --paper:#FFFFFF; --soft:#F3F4F6; --line:#E5E7EB; --muted:#6B7280;
     --elizabeth:#6950A1; --central:#DC241F; --district:#007D32;
     --piccadilly:#0019A8; --jubilee:#7C868D; --victoria:#00A0E2;
+    --swiss1:#D52B1E; --swiss2:#B5121B; --swiss3:#8E0C14;
     --gold:#B8860B;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -324,6 +325,9 @@
   <div class="nowcard" id="nowcard" style="display:none"></div>
 
   <nav class="days" id="daynav">
+    <button class="daychip" style="--c:var(--swiss1)" data-day="s1"><span class="dot"></span>🇨🇭 ג׳ 15.9</button>
+    <button class="daychip" style="--c:var(--swiss2)" data-day="s2"><span class="dot"></span>🇨🇭 ד׳ 16.9</button>
+    <button class="daychip" style="--c:var(--swiss3)" data-day="s3"><span class="dot"></span>🇨🇭 ה׳ 17.9</button>
     <button class="daychip active" style="--c:var(--elizabeth)" data-day="d1"><span class="dot"></span>ו׳ 18.9</button>
     <button class="daychip" style="--c:var(--central)" data-day="d2"><span class="dot"></span>ש׳ 19.9</button>
     <button class="daychip" style="--c:var(--district)" data-day="d3"><span class="dot"></span>א׳ 20.9</button>
@@ -335,13 +339,152 @@
   <main>
 
   <!-- ============ DAY 1 ============ -->
+  <!-- ============ SWISS DAY 1 ============ -->
+  <section class="panel" id="s1" style="--c:var(--swiss1)">
+    <div class="dayhead">
+      <span class="eyebrow">🇨🇭 יום טיסה לשווייץ</span>
+      <h2>תל אביב → ציריך → Yverdon-les-Bains</h2>
+      <p>אלון+חגית, ברקן+עפרה · לינה על חשבון ויטרוקסה</p>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">05:00</div>
+        <h3>נתב״ג · טרמינל 3</h3>
+        <div class="desc">טיסה בינלאומית של אל על — להיות בשדה 3 שעות לפני. צ׳ק-אין אונליין ערב קודם.</div>
+        <div class="seatcard"><span>טיסה <b>LY347</b></span><span>אלון <b>Y6WFQX</b></span><span>חגית <b>Y6RNML</b></span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">08:00</div>
+        <h3>✈️ LY347 תל אביב → ציריך</h3>
+        <div class="desc">4:20 שעות טיסה. נחיתה 11:20 שעון שווייץ (שעה אחת אחורה מישראל).</div>
+      </div>
+      <div class="stop big">
+        <div class="time">11:20</div>
+        <h3>נחיתה בציריך · ביקורת גבולות</h3>
+        <div class="desc">כניסה לאיחוד עם רישום ביומטרי חדש (EES) — טביעות אצבע וצילום. יכול לקחת זמן, לא להילחץ: הרכבת יוצאת כל שעה.</div>
+        <div class="bg">📖 אחרי המזוודות: שלטים «Bahn / Railway» ⇒ מעלית או דרגנוע לקומה −2. תחנת הרכבת מתחת לטרמינל, ~5 דק׳. כרטיס באפליקציית SBB Mobile או במכונה: Zürich Flughafen → Yverdon-les-Bains, 2 נוסעים.</div>
+        <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=Z%C3%BCrich+Airport+Arrivals+2&destination=Z%C3%BCrich+Flughafen+Bahnhof&travelmode=walking">מאולם הנחיתות לרכבת</a>
+      </div>
+      <div class="stop big">
+        <div class="time">12:49</div>
+        <h3>🚆 IC5 → Yverdon-les-Bains · רציף 3</h3>
+        <div class="desc">רכבת ישירה, בלי החלפות, 2:09 שעות. הגעה <b>14:58</b> לרציף 2. לוודא בלוח שהרציף לא השתנה.</div>
+        <div class="tags"><span class="tag todo">איחרתם? אותה רכבת ב-13:49 → 15:58</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">15:05</div>
+        <h3>🏨 צ׳ק-אין · Hôtel du Théâtre</h3>
+        <div class="desc">290 מ׳ מהתחנה: יוצאים מהתחנה ישר ב-Avenue de la Gare, בכיכר שמאלה ל-Avenue Haldimand, המלון מימין. 2 חדרים ע״ח ויטרוקסה, 15–18.9. פרטי הדרכונים כבר אצלם.</div>
+        <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=Gare+d%27Yverdon-les-Bains&destination=H%C3%B4tel+du+Th%C3%A9%C3%A2tre,+Avenue+Haldimand+5,+1400+Yverdon-les-Bains&travelmode=walking">Av. Haldimand 5</a>
+      </div>
+      <div class="stop">
+        <div class="time">ערב</div>
+        <h3>Yverdon — ערב חופשי</h3>
+        <div class="desc">העיר העתיקה והטירה במרחק 5 דק׳ מהמלון (Place Pestalozzi), הטיילת על אגם נשאטל 15 דק׳. מסעדות סביב הכיכר.</div>
+        <div class="bg">📖 Yverdon-les-Bains — עיירת מרחצאות רומית על הקצה הדרומי של אגם נשאטל, ~30 אלף תושבים. הטירה מהמאה ה-13, והמטה החדש של ויטרוקסה ב-Y-Parc, פארק הטכנולוגיה בדרום העיר.</div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=Z%C3%BCrich+Flughafen&destination=Yverdon-les-Bains&travelmode=transit">🚆 מציריך ל-Yverdon</a>
+      <a class="routebtn alt" href="https://www.sbb.ch/en">🎫 כרטיסים SBB</a>
+    </div>
+  </section>
+
+  <!-- ============ SWISS DAY 2 ============ -->
+  <section class="panel" id="s2" style="--c:var(--swiss2)">
+    <div class="dayhead">
+      <span class="eyebrow">🇨🇭 חנוכת המטה של VITROCSA</span>
+      <h2>Vitrocsa Headquarters · Y-Parc</h2>
+      <p>«Exclusive visit · Swiss experiences · Networking cocktail» — לוז מפורט לא נשלח</p>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">09:15</div>
+        <h3>יציאה מהמלון</h3>
+        <div class="desc">המטה ב-Y-Parc, 2.5 ק״מ דרומה. לא הליכה עם נעליים יפות: <b>אוטובוס 605 מתחנת הרכבת 09:20 → Y-Parc/Galilée 09:27</b> (או 602 ב-09:25), ומשם 3 דק׳ הליכה. חלופה: מונית ~6 דק׳.</div>
+        <div class="tags"><span class="tag todo">לבדוק במלון אם ויטרוקסה מארגנת הסעה</span></div>
+        <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=H%C3%B4tel+du+Th%C3%A9%C3%A2tre,+Avenue+Haldimand+5,+1400+Yverdon-les-Bains&destination=Rue+Mileva-Einstein-Mari%C4%87+1,+1400+Yverdon-les-Bains&travelmode=transit">מהמלון למטה</a>
+      </div>
+      <div class="stop big">
+        <div class="time">10:00</div>
+        <h3>🏛️ חנוכת המטה החדש</h3>
+        <div class="desc">Rue Mileva-Einstein-Marić 1. היכרות עם הבניין, סיור במתקני הייצור, מפגש עם השותפים מכל העולם. לאלון סודר אוכל בלי דגים.</div>
+        <div class="bg">📖 Orchidées Constructions SA — החברה שמאחורי VITROCSA, ממציאי חלון ההזזה המינימלי (1992). המטה החדש מרכז את המשרדים והייצור במבנה אחד.</div>
+        <a class="maplink" href="https://maps.app.goo.gl/Liw2EUH3gABkA5Vj6">Vitrocsa Headquarters</a>
+      </div>
+      <div class="stop">
+        <div class="time">ערב</div>
+        <h3>🥂 קוקטייל נטוורקינג</h3>
+        <div class="desc">לפי ההזמנה. שעה ומיקום לא נמסרו — לשאול בקבלת הפנים בבוקר. קוד לבוש לא צוין: עסקי-חופשי.</div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.google.com/maps/dir/?api=1&origin=H%C3%B4tel+du+Th%C3%A9%C3%A2tre,+Avenue+Haldimand+5,+1400+Yverdon-les-Bains&destination=Rue+Mileva-Einstein-Mari%C4%87+1,+1400+Yverdon-les-Bains&travelmode=transit">🚌 מהמלון למטה ויטרוקסה</a>
+      <a class="routebtn alt" href="tel:+41325522012">☎️ Charlotte Rod</a>
+    </div>
+  </section>
+
+  <!-- ============ SWISS DAY 3 ============ -->
+  <section class="panel" id="s3" style="--c:var(--swiss3)">
+    <div class="dayhead">
+      <span class="eyebrow">🇨🇭 Swiss Experience</span>
+      <h2>יום חוויות שווייצריות עם ויטרוקסה</h2>
+      <p>אוטובוס מהמלון · תוכנית מפורטת לא נשלחה</p>
+    </div>
+    <div class="tline">
+      <div class="stop">
+        <div class="time">07:15</div>
+        <h3>ארוחת בוקר במלון</h3>
+        <div class="desc">לצאת מוכנים ליום שלם בחוץ: נעליים נוחות, שכבה חמה (ספטמבר בהרים), מים.</div>
+      </div>
+      <div class="stop big">
+        <div class="time">~08:00</div>
+        <h3>🚌 אוטובוס מהמלון</h3>
+        <div class="desc">ויטרוקסה אוספת את כל האורחים מהמלון. יום מלא של «חוויות שווייצריות טיפוסיות» — הפרטים בשטח.</div>
+      </div>
+      <div class="stop">
+        <div class="time">ערב</div>
+        <h3>חזרה למלון · הכנות למחר</h3>
+        <div class="desc"><b>לארוז בלילה</b> — מחר יוצאים 07:10. <b>צ׳ק-אין אונליין ל-BA759</b> נפתח היום 11:45 (24 שע׳ לפני) — לעשות מהטלפון, כרטיסי עלייה ב-Wallet.</div>
+        <div class="tags"><span class="tag todo">צ׳ק-אין BA · אריזה</span></div>
+      </div>
+    </div>
+    <div class="dayroutes">
+      <a class="routebtn" href="https://www.britishairways.com/travel/managebooking/public/en_gb">✈️ צ׳ק-אין BA · Y79BPH</a>
+    </div>
+  </section>
+
   <section class="panel show" id="d1" style="--c:var(--elizabeth)">
     <div class="dayhead">
-      <span class="eyebrow">יום הגעה + ערב פתיחה 🎤</span>
-      <h2>נוחתים, מתמקמים — וסם סמית׳</h2>
+      <span class="eyebrow">🇨🇭→🇬🇧 יום מעבר + ערב פתיחה 🎤</span>
+      <h2>Yverdon → באזל → לונדון — וסם סמית׳</h2>
       <p>פסטיבל העיצוב של לונדון בעיצומו בכל רחבי העיר</p>
     </div>
     <div class="tline">
+      <div class="stop">
+        <div class="time">07:10</div>
+        <h3>יציאה מהמלון לתחנה</h3>
+        <div class="desc">290 מ׳: מהדלת ימינה ב-Avenue Haldimand, בכיכר ימינה ל-Avenue de la Gare, התחנה מולכם. ~5 דק׳ עם מזוודות. להיות על <b>רציף 1</b> ב-07:20.</div>
+        <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=H%C3%B4tel+du+Th%C3%A9%C3%A2tre,+Avenue+Haldimand+5,+1400+Yverdon-les-Bains&destination=Gare+d%27Yverdon-les-Bains&travelmode=walking">מפת ההליכה</a>
+      </div>
+      <div class="stop big">
+        <div class="time">07:31</div>
+        <h3>🚆 IC51 → Basel SBB · רציף 1</h3>
+        <div class="desc">ישירה, בלי החלפות. הגעה <b>09:26</b> לרציף 20. כרטיס ב-SBB Mobile, אפשר ערב קודם.</div>
+        <div class="tags"><span class="tag todo">פספסתם? 08:31 → בשדה 10:56, צמוד לסגירת המזוודות</span></div>
+      </div>
+      <div class="stop big">
+        <div class="time">09:38</div>
+        <h3>🚌 אוטובוס 50 → EuroAirport · עמדה B</h3>
+        <div class="desc">מהרציף לאולם התחנה, יציאה ראשית לכיכר Centralbahnplatz, תחנת קו 50 מסומנת EuroAirport (~4 דק׳ הליכה). הגעה <b>09:56</b>, תחנה אחרונה מול הטרמינל. חלופה: מונית ~15 דק׳, ~50 פרנק.</div>
+        <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=Basel+SBB&destination=EuroAirport+Basel-Mulhouse&travelmode=transit">מהרכבת לשדה</a>
+      </div>
+      <div class="stop big">
+        <div class="time">10:00</div>
+        <h3>✈️ EuroAirport · BA759 → לונדון</h3>
+        <div class="desc">בריטיש איירווייז מהצד השווייצרי. <b>מסירת מזוודות נסגרת 11:00</b>. אחרי הבידוק — ביקורת דרכונים (בריטניה מחוץ לשנגן). המראה <b>11:45</b>.</div>
+        <div class="seatcard"><span>טיסה <b>BA759</b></span><span>אישור <b>Y79BPH</b></span><span>המראה <b>11:45</b></span><span>נחיתה <b>12:35</b> T5</span></div>
+      </div>
       <div class="stop big">
         <div class="time">12:35</div>
         <h3>נחיתה בהית׳רו · טרמינל 5</h3>
@@ -986,7 +1129,10 @@ document.querySelectorAll('.check').forEach(row=>{
 });
 // ---- "now in plan" card + countdown ----
 const tripSchedule={
- '2026-09-18':[['12:35','נחיתה בהית׳רו T5 ✈️'],['14:30','צ׳ק-אין בדירה'],['16:00','סיבוב היכרות בסוהו'],['17:30','ארוחה קלה מוקדמת 🍜'],['18:30','יציאה לקוליסאום 🚶'],['19:00','סם סמית׳ 🎤']],
+ '2026-09-15':[['05:00','נתב״ג טרמינל 3'],['08:00','טיסה לציריך ✈️'],['11:20','נחיתה בציריך · EES'],['12:49','רכבת IC5 רציף 3 🚆'],['14:58','Yverdon-les-Bains'],['15:05','צ׳ק-אין Hôtel du Théâtre 🏨']],
+ '2026-09-16':[['09:15','יציאה למטה (אוטובוס 605) 🚌'],['10:00','חנוכת המטה של ויטרוקסה 🏛️'],['18:00','קוקטייל נטוורקינג 🥂']],
+ '2026-09-17':[['07:15','ארוחת בוקר'],['08:00','Swiss Experience 🚌'],['20:00','לארוז + צ׳ק-אין BA ✈️']],
+ '2026-09-18':[['07:10','יציאה מהמלון לתחנה'],['07:31','IC51 → Basel SBB 🚆'],['09:38','אוטובוס 50 לשדה 🚌'],['11:45','BA759 → לונדון ✈️'],['12:35','נחיתה בהית׳רו T5 ✈️'],['14:30','צ׳ק-אין בדירה'],['16:00','סיבוב היכרות בסוהו'],['17:30','ארוחה קלה מוקדמת 🍜'],['18:30','יציאה לקוליסאום 🚶'],['19:00','סם סמית׳ 🎤']],
  '2026-09-19':[['09:30','יציאה לשורדיץ׳ 🚇'],['10:00','Old Spitalfields Market'],['11:15','Truman Brewery והשווקים'],['12:45','Beigel Bake 🥯'],['14:00','משולש העיצוב'],['15:30','Boxpark 🍺'],['20:00','Yauatcha 🥟 — הוזמן']],
  '2026-09-20':[['10:30','Saatchi + פסטיבל צ׳לסי'],['13:00','Battersea Park 🌳'],['15:30','מנוחה בדירה'],['16:45','יציאה ל-ABBA! 🚇'],['18:00','ABBA Voyage 🎤'],['21:00','ערב בסוהו']],
  '2026-09-21':[['10:45','V&A — סקיאפרלי 🎫'],['13:00','צהריים בסאות׳ קנזינגטון'],['15:30','Moco Museum 🖌️'],['17:00','הייד פארק 🎧 (אופציונלי)'],['19:45','The Barbary 🔥']],
@@ -1245,7 +1391,7 @@ try{
 
 // ---- auto-open today's day if within trip ----
 (function(){
-  const map={'2026-09-18':'d1','2026-09-19':'d2','2026-09-20':'d3','2026-09-21':'d4','2026-09-22':'d5','2026-09-23':'d6'};
+  const map={'2026-09-15':'s1','2026-09-16':'s2','2026-09-17':'s3','2026-09-18':'d1','2026-09-19':'d2','2026-09-20':'d3','2026-09-21':'d4','2026-09-22':'d5','2026-09-23':'d6'};
   const today=new Date().toISOString().slice(0,10);
   if(map[today]){
     const chip=document.querySelector('.daychip[data-day="'+map[today]+'"]');
