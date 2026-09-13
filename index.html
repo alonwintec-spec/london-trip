@@ -71,6 +71,7 @@
     -webkit-overflow-scrolling:touch;scrollbar-width:none;
   }
   nav.days::-webkit-scrollbar{display:none}
+  .wx{margin-top:8px;font-size:13px;font-weight:600;color:#0f3d2e;background:#e7f3ee;border-radius:10px;padding:7px 10px;line-height:1.45}
   .daychip{
     flex:none;border:2px solid var(--line);background:#fff;border-radius:999px;
     padding:7px 14px;font-family:'Rubik';font-weight:600;font-size:14px;color:var(--ink);
@@ -345,6 +346,7 @@
       <span class="eyebrow">🇨🇭 יום טיסה לשווייץ</span>
       <h2>תל אביב → ציריך → Yverdon-les-Bains</h2>
       <p>אלון+חגית, ברקן+עפרה · לינה על חשבון ויטרוקסה</p>
+      <div class="wx" data-wx="2026-09-15" data-loc="ch">🌫 ערפל בבוקר · 28°/13° · גשם 0% · 👕 קצר וחולצה קלה, ז׳קט לערב</div>
     </div>
     <div class="tline">
       <div class="stop">
@@ -406,6 +408,7 @@
       <span class="eyebrow">🇨🇭 חנוכת המטה של VITROCSA</span>
       <h2>Vitrocsa Headquarters · Y-Parc</h2>
       <p>«Exclusive visit · Swiss experiences · Networking cocktail» — לוז מפורט לא נשלח</p>
+      <div class="wx" data-wx="2026-09-16" data-loc="ch">🌧 גשם · 18°/11° · גשם 59% · 👕 ארוך + סוודר או ז׳קט קל · 🌂 מטרייה</div>
     </div>
     <div class="tline">
       <div class="stop">
@@ -440,6 +443,7 @@
       <span class="eyebrow">🇨🇭 Swiss Experience</span>
       <h2>יום חוויות שווייצריות עם ויטרוקסה</h2>
       <p>אוטובוס מהמלון · תוכנית מפורטת לא נשלחה</p>
+      <div class="wx" data-wx="2026-09-17" data-loc="ch">☁️ מעונן · 19°/10° · גשם 9% · 👕 ארוך + סוודר או ז׳קט קל</div>
     </div>
     <div class="tline">
       <div class="stop">
@@ -469,6 +473,7 @@
       <span class="eyebrow">🇨🇭→🇬🇧 יום מעבר + ערב פתיחה 🎤</span>
       <h2>Yverdon → באזל → לונדון — וסם סמית׳</h2>
       <p>פסטיבל העיצוב של לונדון בעיצומו בכל רחבי העיר</p>
+      <div class="wx" data-wx="2026-09-18" data-loc="uk">☁️ מעונן · 19°/12° · גשם 8% · 👕 ארוך + סוודר או ז׳קט קל</div>
     </div>
     <div class="tline">
       <div class="stop">
@@ -546,6 +551,7 @@
       <span class="eyebrow">יום שורדיץ׳</span>
       <h2>Shoreditch Design Week</h2>
       <p>מסלול בקשת אחת מדרום לצפון · 6–8 ק״מ הליכה · נעליים נוחות!</p>
+      <div class="wx" data-wx="2026-09-19" data-loc="uk">☁️ מעונן · 22°/16° · גשם 28% · 👕 קצר או ארוך קל · מטרייה קטנה ליתר ביטחון</div>
     </div>
     <div class="tline">
       <div class="stop">
@@ -627,6 +633,7 @@
       <span class="eyebrow">צ׳לסי + ערב אבבא</span>
       <h2>Saatchi, בטרסי פארק ו-ABBA</h2>
       <p>היום האחרון של פסטיבל האמנויות של צ׳לסי</p>
+      <div class="wx" data-wx="2026-09-20" data-loc="uk">☁️ מעונן · 20°/16° · גשם 13% · 👕 ארוך + סוודר או ז׳קט קל</div>
     </div>
     <div class="tline">
       <div class="stop">
@@ -853,6 +860,9 @@
       <h3>🥟 Yauatcha Soho — הוזמן ✅</h3>
       <div class="sub">שבת 19.9 · 20:00–22:00 · זוג ע״ש חגית · אסמכתא 6Y5DFY9YNZSY</div>
       <p>המוסד של סוהו לדים־סאם. חובה: ה-venison puffs וה-scallop shui mai. גם הקינוחים־מאפים שלהם מפורסמים. <b>קוד לבוש smart</b> — בלי בגדי ספורט/טרנינג, כובעים או כפכפים. השולחן נשמר עד 15 דקות.</p>
+      <div class="wx" data-wx="2026-09-23" data-loc="uk">🌫 ערפל בבוקר · 22°/15° · גשם 7% · 👕 קצר או ארוך קל</div>
+      <div class="wx" data-wx="2026-09-22" data-loc="uk">☁️ מעונן · 23°/16° · גשם 8% · 👕 קצר או ארוך קל</div>
+      <div class="wx" data-wx="2026-09-21" data-loc="uk">☁️ מעונן · 23°/14° · גשם 2% · 👕 קצר או ארוך קל</div>
       <span class="walk">🚶 2 דקות מהדירה</span>
       <div class="btnrow">
         <a class="btn solid" href="https://www.yauatcha.com">ניהול ההזמנה</a>
@@ -1398,6 +1408,22 @@ try{
     document.getElementById('dlstatus').textContent='אפשר ללחוץ שוב לרענון האריחים';
   }
 }catch(e){}
+
+
+// ---- מזג אוויר חי (Open-Meteo, בלי מפתח) — מחליף את התחזית הסטטית כשיש רשת ----
+(function(){
+  const LOC={ch:[46.78,6.64,'Europe/Zurich'],uk:[51.51,-0.13,'Europe/London']};
+  const icon=c=>c===0?'☀️ בהיר':(c<=2?'🌤 בהיר עם עננים':c===3?'☁️ מעונן':(c===45||c===48)?'🌫 ערפל בבוקר':c<=55?'🌦 טפטוף':c<95?'🌧 גשם':'⛈ סופות');
+  const wear=(mx,mn,r)=>{let w=mx>=26?'קצר וחולצה קלה':mx>=21?'קצר או ארוך קל':mx>=17?'ארוך + סוודר או ז׳קט קל':'ארוך, סוודר ומעיל קל';if(mn<13&&mx>=21)w+=', ז׳קט לערב';if(r>=40)w+=' · 🌂 מטרייה';else if(r>=20)w+=' · מטרייה קטנה ליתר ביטחון';return w;};
+  Object.entries(LOC).forEach(([k,[la,lo,tz]])=>{
+    const els=[...document.querySelectorAll('.wx[data-loc="'+k+'"]')]; if(!els.length) return;
+    const days=els.map(e=>e.dataset.wx).sort();
+    fetch('https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone='+encodeURIComponent(tz)+'&start_date='+days[0]+'&end_date='+days[days.length-1])
+      .then(r=>r.json()).then(j=>{const d=j.daily; d.time.forEach((t,i)=>{const el=els.find(e=>e.dataset.wx===t); if(!el) return;
+        const mx=d.temperature_2m_max[i],mn=d.temperature_2m_min[i],r=d.precipitation_probability_max[i]||0;
+        el.textContent=icon(d.weather_code[i])+' · '+Math.round(mx)+'°/'+Math.round(mn)+'° · גשם '+r+'% · 👕 '+wear(mx,mn,r)+' · עודכן עכשיו';});}).catch(()=>{});
+  });
+})();
 
 // ---- auto-open today's day if within trip ----
 (function(){
