@@ -1,5 +1,5 @@
 // london-trip service worker — offline shell + map tiles
-const SHELL_CACHE = 'ldn-shell-v1';
+const SHELL_CACHE = 'ldn-shell-v2';
 const TILE_CACHE = 'ldn-tiles-v1';
 const ASSET_CACHE = 'ldn-assets-v1';
 
