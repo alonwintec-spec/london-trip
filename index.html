@@ -378,9 +378,19 @@
         <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=Gare+d%27Yverdon-les-Bains&destination=H%C3%B4tel+du+Th%C3%A9%C3%A2tre,+Avenue+Haldimand+5,+1400+Yverdon-les-Bains&travelmode=walking">Av. Haldimand 5</a>
       </div>
       <div class="stop">
-        <div class="time">ערב</div>
-        <h3>Yverdon — ערב חופשי</h3>
-        <div class="desc">העיר העתיקה והטירה במרחק 5 דק׳ מהמלון (Place Pestalozzi), הטיילת על אגם נשאטל 15 דק׳. מסעדות סביב הכיכר.</div>
+        <div class="time">~17:30</div>
+        <h3>סיבוב בעיר העתיקה + שקיעה על האגם</h3>
+        <div class="desc">מהמלון 5 דק׳ ל-Place Pestalozzi: הטירה מהמאה ה-13, הכנסייה, הסמטאות. משם ~15 דק׳ לטיילת ולחוף על אגם נשאטל (Plage d׳Yverdon) — שקיעה בסביבות 19:40, שווה לתזמן.</div>
+        <a class="maplink" href="https://www.google.com/maps/dir/?api=1&origin=H%C3%B4tel+du+Th%C3%A9%C3%A2tre,+Yverdon-les-Bains&destination=Plage+d%27Yverdon-les-Bains&waypoints=Ch%C3%A2teau+d%27Yverdon-les-Bains&travelmode=walking">מסלול הערב</a>
+      </div>
+      <div class="stop big">
+        <div class="time">20:00</div>
+        <h3>🥩 Restaurant de la Place — אנטריקוט ברוטב פלפל</h3>
+        <div class="desc">בכיכר Pestalozzi 9, אזור ללא מכוניות, 5 דק׳ מהמלון. פתוח כל יום עד חצות. <b>אנטריקוט בקר על אבן צפחה 200/300 גר׳ (43/52 פרנק) + רוטב פלפל ירוק (5)</b>. גם פונדו, רשטי ופילה פרש מהאגם. להזמין מראש — 4 אנשים ביום שלישי.</div>
+        <div class="tags"><span class="tag todo">הזמנה אונליין · טל׳ 024 426 26 36</span></div>
+        <a class="maplink" href="https://laplace.resos.com/booking">הזמנת שולחן</a>
+        <a class="maplink" href="https://maps.google.com/?q=Restaurant+de+la+Place,+Place+Pestalozzi+9,+Yverdon-les-Bains">Place Pestalozzi 9</a>
+        <div class="bg">📖 גיבוי: Le Ranch (בשר על צפחה, רוטב פלפל ירוק) סגור בימי שלישי. Avenue 8 ליד התחנה — אנטריקוט עם רוטב פלפל סצ׳ואן או קפה דה פארי, אווירה מודרנית.</div>
         <div class="bg">📖 Yverdon-les-Bains — עיירת מרחצאות רומית על הקצה הדרומי של אגם נשאטל, ~30 אלף תושבים. הטירה מהמאה ה-13, והמטה החדש של ויטרוקסה ב-Y-Parc, פארק הטכנולוגיה בדרום העיר.</div>
       </div>
     </div>
@@ -1129,7 +1139,7 @@ document.querySelectorAll('.check').forEach(row=>{
 });
 // ---- "now in plan" card + countdown ----
 const tripSchedule={
- '2026-09-15':[['05:00','נתב״ג טרמינל 3'],['08:00','טיסה לציריך ✈️'],['11:20','נחיתה בציריך · EES'],['12:49','רכבת IC5 רציף 3 🚆'],['14:58','Yverdon-les-Bains'],['15:05','צ׳ק-אין Hôtel du Théâtre 🏨']],
+ '2026-09-15':[['05:00','נתב״ג טרמינל 3'],['08:00','טיסה לציריך ✈️'],['11:20','נחיתה בציריך · EES'],['12:49','רכבת IC5 רציף 3 🚆'],['14:58','Yverdon-les-Bains'],['15:05','צ׳ק-אין Hôtel du Théâtre 🏨'],['17:30','עיר עתיקה + שקיעה על האגם'],['20:00','Restaurant de la Place 🥩']],
  '2026-09-16':[['09:15','יציאה למטה (אוטובוס 605) 🚌'],['10:00','חנוכת המטה של ויטרוקסה 🏛️'],['18:00','קוקטייל נטוורקינג 🥂']],
  '2026-09-17':[['07:15','ארוחת בוקר'],['08:00','Swiss Experience 🚌'],['20:00','לארוז + צ׳ק-אין BA ✈️']],
  '2026-09-18':[['07:10','יציאה מהמלון לתחנה'],['07:31','IC51 → Basel SBB 🚆'],['09:38','אוטובוס 50 לשדה 🚌'],['11:45','BA759 → לונדון ✈️'],['12:35','נחיתה בהית׳רו T5 ✈️'],['14:30','צ׳ק-אין בדירה'],['16:00','סיבוב היכרות בסוהו'],['17:30','ארוחה קלה מוקדמת 🍜'],['18:30','יציאה לקוליסאום 🚶'],['19:00','סם סמית׳ 🎤']],
